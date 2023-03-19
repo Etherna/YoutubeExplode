@@ -75,7 +75,7 @@ public static class ConversionExtensions
         IProgress<double>? progress = null,
         CancellationToken cancellationToken = default)
     {
-        var ffmpeg = new FFmpeg(request.FFmpegCliFilePath);
+        var ffmpeg = new FFmpeg(request.FFmpegCliFilePath, videoClient.FFmpegHWAccelerationMethod);
         var converter = new Converter(videoClient, ffmpeg, request.Preset);
 
         await converter.ProcessAsync(

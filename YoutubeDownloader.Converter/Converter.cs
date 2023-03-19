@@ -36,6 +36,10 @@ internal partial class Converter
     {
         var arguments = new ArgumentsBuilder();
 
+        // Add HW acceleration
+        if (_ffmpeg.HWAccelerationMethod is not null)
+            arguments.Add("-hwaccel").Add(_ffmpeg.HWAccelerationMethod);
+
         // Stream inputs
         foreach (var streamInput in streamInputs)
             arguments.Add("-i").Add(streamInput.FilePath);
