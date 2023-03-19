@@ -1,0 +1,32 @@
+name: Stable release deploy to NuGet
+
+on:
+  push:
+    tags:
+    - 'eth-v*.*.*'
+
+jobs:
+  build-test-package:
+    runs-on: windows-latest
+
+    steps:
+    - uses: actions/checkout@v3
+      with:
+        fetch-depth: 0
+
+    - name: Setup .NET SDK
+      uses: actions/setup-dotnet@v3
+      with:
+        dotnet-version: '7.0.x'
+
+    - name: Build with dotnet
+      run: dotnet build --configuration Release
+
+    - name: Run unit tests
+      run: dotnet test --configuration Release
+      
+    - name: Generate nuget package
+      run: dotnet pack --configuration Release -o nupkg
+
+    - name: Push packages
+      run: dotnet nuget push './nupkg/*.nupkg' --api-key ${{secrets.NUGET_KEY}} --source https://api.nuget.org/v3/index.json
