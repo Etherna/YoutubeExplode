@@ -88,9 +88,16 @@ internal partial class Converter
             }
         }
 
-        // MP4: specify the codec for subtitles manually, otherwise they may not get injected
-        if (container == Container.Mp4 && subtitleInputs.Any())
-            arguments.Add("-c:s").Add("mov_text");
+        // MP4
+        if (container == Container.Mp4)
+        {
+            //specify the codec for subtitles manually, otherwise they may not get injected
+            if (subtitleInputs.Any())
+                arguments.Add("-c:s").Add("mov_text");
+
+            //move the index (moov atom) to the beginning of the file
+            arguments.Add("-movflags").Add("faststart");
+        }
 
         // MP3: set constant bitrate for audio streams, otherwise the metadata may contain invalid total duration
         // https://superuser.com/a/893044
