@@ -1,3 +1,13 @@
+
+# Attention
+
+These are changelogs from original repository.
+
+Etherna changelogs instead are under github's releases:  
+https://github.com/Etherna/YoutubeExplode/releases
+
+*************
+
 # Changelog
 
 ## v6.2.10 (17-Mar-2023)
