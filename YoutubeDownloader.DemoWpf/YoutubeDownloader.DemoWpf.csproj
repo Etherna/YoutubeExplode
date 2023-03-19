@@ -4,12 +4,7 @@
     <OutputType>WinExe</OutputType>
     <TargetFramework>net7.0-windows</TargetFramework>
     <UseWPF>true</UseWPF>
-    <ApplicationIcon>../favicon.ico</ApplicationIcon>
   </PropertyGroup>
-
-  <ItemGroup>
-    <Resource Include="../favicon.ico" />
-  </ItemGroup>
 
   <ItemGroup>
     <PackageReference Include="MaterialDesignColors" Version="2.1.1" />
@@ -17,7 +12,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\YoutubeExplode\YoutubeExplode.csproj" />
+    <ProjectReference Include="..\YoutubeDownloader\YoutubeDownloader.csproj" />
   </ItemGroup>
 
 </Project>
