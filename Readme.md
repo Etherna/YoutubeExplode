@@ -4,7 +4,7 @@
 Behind a layer of abstraction, this library works by scraping raw page data and exploiting reverse-engineered internal endpoints.
 
 > 📝 Want to learn more about how YouTube works under the hood?
-> See [Reverse-Engineering YouTube: Revisited](https://tyrrrz.me/blog/reverse-engineering-youtube-revisited).
+> [Read this article](https://tyrrrz.me/blog/reverse-engineering-youtube-revisited).
 
 ## Install
 

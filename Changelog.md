@@ -10,6 +10,10 @@ https://github.com/Etherna/YoutubeExplode/releases
 
 # Changelog
 
+## v6.2.13 (27-Apr-2023)
+
+- Improved support for older target frameworks via polyfills.
+
 ## v6.2.12 (31-Mar-2023)
 
 - Fixed an issue where calling `VideoClient.GetAsync(...)` failed with `Could not extract video upload date` on certain videos.
