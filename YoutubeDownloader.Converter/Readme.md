@@ -1,28 +1,3 @@
-# Attention, Etherna's YoutubeDownloader is a fork!
-
-This is a fork of the original [YoutubeExplode](https://github.com/Tyrrrz/YoutubeExplode) project.  
-We kept all the good that original project has, with some useful feature addition.  
-Currently we decided to make only little edits, where really necessary. We will try to keep updated with mergings from original repository.
-
-Anyway, we also removed any hate speech from the original project.  
-We do not share hatred towards anyone, and we think that mutual respect is the basis of every civil community.
-
-We started our versioning from the same as the original project, but it may differ in the future.  
-We are addopting SemVer.
-
-## Issue reports
-
-If you've discovered a bug with our implementation, or have an idea for a new feature, please report it to our issue manager based on Jira https://etherna.atlassian.net/projects/YEF.  
-Instead, if also original project is affected, please report it to the original [YoutubeExplode](https://github.com/Tyrrrz/YoutubeExplode) GitHub's page.
-
-Detailed reports with stack traces, actual and expected behaviours are welcome.
-
-## Questions? Problems?
-
-For questions or problems please write an email to [info@etherna.io](mailto:info@etherna.io).
-
----
-
 # YoutubeExplode.Converter
 
 [![Version](https://img.shields.io/nuget/v/YoutubeExplode.svg)](https://nuget.org/packages/YoutubeExplode.Converter)
