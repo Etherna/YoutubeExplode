@@ -10,7 +10,7 @@ namespace YoutubeExplode;
 /// <summary>
 /// Client for interacting with YouTube.
 /// </summary>
-public class YoutubeClient
+public class YoutubeClient : IYoutubeClient
 {
     /// <summary>
     /// Operations related to YouTube videos.
