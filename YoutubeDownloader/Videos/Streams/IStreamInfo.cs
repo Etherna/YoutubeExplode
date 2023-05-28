@@ -37,7 +37,7 @@ public interface IStreamInfo
 public static class StreamInfoExtensions
 {
     internal static bool IsThrottled(this IStreamInfo streamInfo) => !string.Equals(
-        UriEx.TryGetQueryParameterValue(streamInfo.Url, "ratebypass"),
+        UrlEx.TryGetQueryParameterValue(streamInfo.Url, "ratebypass"),
         "yes",
         StringComparison.OrdinalIgnoreCase
     );
@@ -47,7 +47,7 @@ public static class StreamInfoExtensions
     /// Returns null if the sequence is empty.
     /// </summary>
     public static IStreamInfo? TryGetWithHighestBitrate(this IEnumerable<IStreamInfo> streamInfos) =>
-        streamInfos.OrderByDescending(s => s.Bitrate).FirstOrDefault();
+        streamInfos.MaxBy(s => s.Bitrate);
 
     /// <summary>
     /// Gets the stream with the highest bitrate.
