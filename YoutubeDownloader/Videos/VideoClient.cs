@@ -27,18 +27,12 @@ public class VideoClient
     public ClosedCaptionClient ClosedCaptions { get; }
 
     /// <summary>
-    /// Optional method to use with FFmpeg HW Acceleration. Null disable HWA
-    /// </summary>
-    public string? FFmpegHWAccelerationMethod { get; }
-
-    /// <summary>
     /// Initializes an instance of <see cref="VideoClient" />.
     /// </summary>
-    public VideoClient(HttpClient http, string? ffmpegHWAccelerationMethod)
+    public VideoClient(HttpClient http)
     {
         _controller = new VideoController(http);
 
-        FFmpegHWAccelerationMethod = ffmpegHWAccelerationMethod;
         Streams = new StreamClient(http);
         ClosedCaptions = new ClosedCaptionClient(http);
     }
