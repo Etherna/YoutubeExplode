@@ -13,7 +13,7 @@
   </PropertyGroup>
 
   <!-- Disable nullability warnings on frameworks where BCL is not annotated -->
-  <PropertyGroup Condition="'$(TargetFramework)' == 'netstandard2.0' or '$(TargetFramework)' == 'net461'">
+  <PropertyGroup Condition="'$(TargetFramework)' == 'netstandard2.0' OR '$(TargetFramework)' == 'net461'">
     <Nullable>annotations</Nullable>
   </PropertyGroup>
 
