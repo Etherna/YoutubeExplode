@@ -13,7 +13,7 @@
   </PropertyGroup>
 
   <!-- Disable nullability warnings on frameworks where BCL is not annotated -->
-  <PropertyGroup Condition="'$(TargetFramework)' == 'netstandard2.0' or '$(TargetFramework)' == 'net461'">
+  <PropertyGroup Condition="'$(TargetFramework)' == 'netstandard2.0' OR '$(TargetFramework)' == 'net461'">
     <Nullable>annotations</Nullable>
   </PropertyGroup>
 
@@ -21,9 +21,7 @@
     <Authors>$(Company)</Authors>
     <PackageTags>youtube video download playlist user channel closed caption tracks subtitles parse extract metadata info net core standard</PackageTags>
     <PackageProjectUrl>https://github.com/Etherna/youtube-downloader</PackageProjectUrl>
-    <PackageLicenseExpression>LGPL-3.0-only</PackageLicenseExpression>
     <PackageRequireLicenseAcceptance>true</PackageRequireLicenseAcceptance>
-    <DebugType>embedded</DebugType>
 	  
     <RepositoryType>git</RepositoryType>
     <RepositoryUrl>https://github.com/Etherna/youtube-downloader</RepositoryUrl>
