@@ -36,10 +36,6 @@ internal partial class Converter
     {
         var arguments = new ArgumentsBuilder();
 
-        // Add HW acceleration
-        if (_ffmpeg.HWAccelerationMethod is not null)
-            arguments.Add("-hwaccel").Add(_ffmpeg.HWAccelerationMethod);
-
         // Stream inputs
         foreach (var streamInput in streamInputs)
             arguments.Add("-i").Add(streamInput.FilePath);
@@ -103,7 +99,7 @@ internal partial class Converter
             arguments.Add("-movflags").Add("faststart");
         }
 
-        // MP3: set constant bitrate for audio streams, otherwise the metadata may contain invalid total duration
+        // MP3: set a constant bitrate for audio streams, otherwise the metadata may contain invalid total duration
         // https://superuser.com/a/893044
         if (container == Container.Mp3)
         {

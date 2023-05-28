@@ -18,15 +18,7 @@ internal partial class FFmpeg
 {
     private readonly string _filePath;
 
-    public FFmpeg(
-        string filePath,
-        string? hwAccelerationMethod)
-    {
-        _filePath = filePath;
-        HWAccelerationMethod = hwAccelerationMethod;
-    }
-
-    public string? HWAccelerationMethod { get; }
+    public FFmpeg(string filePath) => _filePath = filePath;
 
     public async ValueTask ExecuteAsync(
         string arguments,
