@@ -35,11 +35,11 @@ public class YoutubeClient : IYoutubeClient
     /// <summary>
     /// Initializes an instance of <see cref="YoutubeClient" />.
     /// </summary>
-    public YoutubeClient(HttpClient http, string? hwAccelerationMethod = null)
+    public YoutubeClient(HttpClient http)
     {
         var youtubeHttp = new HttpClient(new YoutubeHttpMessageHandler(http), true);
 
-        Videos = new VideoClient(youtubeHttp, hwAccelerationMethod);
+        Videos = new VideoClient(youtubeHttp);
         Playlists = new PlaylistClient(youtubeHttp);
         Channels = new ChannelClient(youtubeHttp);
         Search = new SearchClient(youtubeHttp);
@@ -48,7 +48,7 @@ public class YoutubeClient : IYoutubeClient
     /// <summary>
     /// Initializes an instance of <see cref="YoutubeClient" />.
     /// </summary>
-    public YoutubeClient(string? hwAccelerationMethod = null) : this(Http.Client, hwAccelerationMethod)
+    public YoutubeClient() : this(Http.Client)
     {
     }
 }
