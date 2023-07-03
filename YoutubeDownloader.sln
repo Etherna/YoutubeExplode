@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
-VisualStudioVersion = 17.5.33502.453
+VisualStudioVersion = 17.6.33815.320
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{2D3632A9-3DE4-4E64-AC3E-94810F2F55D0}"
 	ProjectSection(SolutionItems) = preProject
@@ -12,28 +12,28 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 		Readme.md = Readme.md
 	EndProjectSection
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "YoutubeDownloader", "YoutubeDownloader\YoutubeDownloader.csproj", "{C2771498-949E-4FAA-8FDF-6CEC1BC30359}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "YoutubeDownloader", "YoutubeDownloader\YoutubeDownloader.csproj", "{A7C8A144-D9EC-4DDA-8CE3-D48BA3AD88CD}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "YoutubeDownloader.Converter", "YoutubeDownloader.Converter\YoutubeDownloader.Converter.csproj", "{38321688-8ACF-4C7E-AAD4-C4994F73342A}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "YoutubeDownloader.Converter", "YoutubeDownloader.Converter\YoutubeDownloader.Converter.csproj", "{935F85EC-5B73-4BFB-B802-56ACD20B2F59}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "YoutubeDownloader.Converter.Tests", "YoutubeDownloader.Converter.Tests\YoutubeDownloader.Converter.Tests.csproj", "{8E70CCE5-ADA2-4A54-9D09-32BC76DC7119}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "YoutubeDownloader.Converter.Tests", "YoutubeDownloader.Converter.Tests\YoutubeDownloader.Converter.Tests.csproj", "{F39025C7-AB2B-48AD-AB9F-D715A8440F19}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "YoutubeDownloader.Tests", "YoutubeDownloader.Tests\YoutubeDownloader.Tests.csproj", "{18159A64-A3D6-4FD0-BDD0-80643F7D7A84}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "YoutubeDownloader.Tests", "YoutubeDownloader.Tests\YoutubeDownloader.Tests.csproj", "{35931F1E-2B33-47BB-B3A3-B405EC13F2EE}"
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "workflows", "workflows", "{D548F849-9723-45B2-B799-EEA88546FEA2}"
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "workflows", "workflows", "{8A664B29-C9CC-4703-A30D-DC31C56A4801}"
 	ProjectSection(SolutionItems) = preProject
 		.github\workflows\nuget-stable-deploy.yml = .github\workflows\nuget-stable-deploy.yml
 	EndProjectSection
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{825A052F-20DC-494F-8199-179A4C75D8F5}"
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{CD9FCE3D-6EE6-4C14-89FE-93FB045C83D6}"
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "tests", "tests", "{FCDFE177-903C-4CB5-A408-7D0A18E1C9A9}"
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "tests", "tests", "{3E5FD1F9-8A5F-47B2-89A6-F61F757E1366}"
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "sample", "sample", "{0867EDA7-5694-4E15-A64F-554277BAA8F6}"
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "sample", "sample", "{B5D28432-E78A-4141-9ADF-8E8411CAEACD}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "YoutubeExplode.Demo.Gui", "YoutubeExplode.Demo.Gui\YoutubeExplode.Demo.Gui.csproj", "{BDB7CAD8-5F73-48BF-B765-ADE94CBD6097}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "YoutubeDownloader.Demo.Gui", "YoutubeDownloader.Demo.Gui\YoutubeDownloader.Demo.Gui.csproj", "{B5400F96-4C2B-4F7D-825A-7E07922E83DE}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "YoutubeExplode.Demo.Cli", "YoutubeExplode.Demo.Cli\YoutubeExplode.Demo.Cli.csproj", "{EE788D24-5F12-4361-AB0D-444951273137}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "YoutubeDownloader.Demo.Cli", "YoutubeDownloader.Demo.Cli\YoutubeDownloader.Demo.Cli.csproj", "{39E356A0-1AD8-498A-AC99-F6C0389E0F19}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -41,42 +41,42 @@ Global
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{C2771498-949E-4FAA-8FDF-6CEC1BC30359}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{C2771498-949E-4FAA-8FDF-6CEC1BC30359}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{C2771498-949E-4FAA-8FDF-6CEC1BC30359}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{C2771498-949E-4FAA-8FDF-6CEC1BC30359}.Release|Any CPU.Build.0 = Release|Any CPU
-		{38321688-8ACF-4C7E-AAD4-C4994F73342A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{38321688-8ACF-4C7E-AAD4-C4994F73342A}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{38321688-8ACF-4C7E-AAD4-C4994F73342A}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{38321688-8ACF-4C7E-AAD4-C4994F73342A}.Release|Any CPU.Build.0 = Release|Any CPU
-		{8E70CCE5-ADA2-4A54-9D09-32BC76DC7119}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{8E70CCE5-ADA2-4A54-9D09-32BC76DC7119}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{8E70CCE5-ADA2-4A54-9D09-32BC76DC7119}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{8E70CCE5-ADA2-4A54-9D09-32BC76DC7119}.Release|Any CPU.Build.0 = Release|Any CPU
-		{18159A64-A3D6-4FD0-BDD0-80643F7D7A84}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{18159A64-A3D6-4FD0-BDD0-80643F7D7A84}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{18159A64-A3D6-4FD0-BDD0-80643F7D7A84}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{18159A64-A3D6-4FD0-BDD0-80643F7D7A84}.Release|Any CPU.Build.0 = Release|Any CPU
-		{BDB7CAD8-5F73-48BF-B765-ADE94CBD6097}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{BDB7CAD8-5F73-48BF-B765-ADE94CBD6097}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{BDB7CAD8-5F73-48BF-B765-ADE94CBD6097}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{BDB7CAD8-5F73-48BF-B765-ADE94CBD6097}.Release|Any CPU.Build.0 = Release|Any CPU
-		{EE788D24-5F12-4361-AB0D-444951273137}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{EE788D24-5F12-4361-AB0D-444951273137}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{EE788D24-5F12-4361-AB0D-444951273137}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{EE788D24-5F12-4361-AB0D-444951273137}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A7C8A144-D9EC-4DDA-8CE3-D48BA3AD88CD}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A7C8A144-D9EC-4DDA-8CE3-D48BA3AD88CD}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A7C8A144-D9EC-4DDA-8CE3-D48BA3AD88CD}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A7C8A144-D9EC-4DDA-8CE3-D48BA3AD88CD}.Release|Any CPU.Build.0 = Release|Any CPU
+		{935F85EC-5B73-4BFB-B802-56ACD20B2F59}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{935F85EC-5B73-4BFB-B802-56ACD20B2F59}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{935F85EC-5B73-4BFB-B802-56ACD20B2F59}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{935F85EC-5B73-4BFB-B802-56ACD20B2F59}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F39025C7-AB2B-48AD-AB9F-D715A8440F19}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F39025C7-AB2B-48AD-AB9F-D715A8440F19}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F39025C7-AB2B-48AD-AB9F-D715A8440F19}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F39025C7-AB2B-48AD-AB9F-D715A8440F19}.Release|Any CPU.Build.0 = Release|Any CPU
+		{35931F1E-2B33-47BB-B3A3-B405EC13F2EE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{35931F1E-2B33-47BB-B3A3-B405EC13F2EE}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{35931F1E-2B33-47BB-B3A3-B405EC13F2EE}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{35931F1E-2B33-47BB-B3A3-B405EC13F2EE}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B5400F96-4C2B-4F7D-825A-7E07922E83DE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B5400F96-4C2B-4F7D-825A-7E07922E83DE}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B5400F96-4C2B-4F7D-825A-7E07922E83DE}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B5400F96-4C2B-4F7D-825A-7E07922E83DE}.Release|Any CPU.Build.0 = Release|Any CPU
+		{39E356A0-1AD8-498A-AC99-F6C0389E0F19}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{39E356A0-1AD8-498A-AC99-F6C0389E0F19}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{39E356A0-1AD8-498A-AC99-F6C0389E0F19}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{39E356A0-1AD8-498A-AC99-F6C0389E0F19}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
-		{C2771498-949E-4FAA-8FDF-6CEC1BC30359} = {825A052F-20DC-494F-8199-179A4C75D8F5}
-		{38321688-8ACF-4C7E-AAD4-C4994F73342A} = {825A052F-20DC-494F-8199-179A4C75D8F5}
-		{8E70CCE5-ADA2-4A54-9D09-32BC76DC7119} = {FCDFE177-903C-4CB5-A408-7D0A18E1C9A9}
-		{18159A64-A3D6-4FD0-BDD0-80643F7D7A84} = {FCDFE177-903C-4CB5-A408-7D0A18E1C9A9}
-		{D548F849-9723-45B2-B799-EEA88546FEA2} = {2D3632A9-3DE4-4E64-AC3E-94810F2F55D0}
-		{BDB7CAD8-5F73-48BF-B765-ADE94CBD6097} = {0867EDA7-5694-4E15-A64F-554277BAA8F6}
-		{EE788D24-5F12-4361-AB0D-444951273137} = {0867EDA7-5694-4E15-A64F-554277BAA8F6}
+		{A7C8A144-D9EC-4DDA-8CE3-D48BA3AD88CD} = {CD9FCE3D-6EE6-4C14-89FE-93FB045C83D6}
+		{935F85EC-5B73-4BFB-B802-56ACD20B2F59} = {CD9FCE3D-6EE6-4C14-89FE-93FB045C83D6}
+		{F39025C7-AB2B-48AD-AB9F-D715A8440F19} = {3E5FD1F9-8A5F-47B2-89A6-F61F757E1366}
+		{35931F1E-2B33-47BB-B3A3-B405EC13F2EE} = {3E5FD1F9-8A5F-47B2-89A6-F61F757E1366}
+		{8A664B29-C9CC-4703-A30D-DC31C56A4801} = {2D3632A9-3DE4-4E64-AC3E-94810F2F55D0}
+		{B5400F96-4C2B-4F7D-825A-7E07922E83DE} = {B5D28432-E78A-4141-9ADF-8E8411CAEACD}
+		{39E356A0-1AD8-498A-AC99-F6C0389E0F19} = {B5D28432-E78A-4141-9ADF-8E8411CAEACD}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {DEA5BDC6-C56D-4AC1-A8C6-2C64A5A75FDD}

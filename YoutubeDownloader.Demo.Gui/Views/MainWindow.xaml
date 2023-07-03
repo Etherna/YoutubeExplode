@@ -11,6 +11,7 @@
     Height="610"
     Background="{DynamicResource MaterialDesignPaper}"
     FocusManager.FocusedElement="{Binding ElementName=QueryTextBox}"
+    Icon="/YoutubeExplode.Demo.Gui;component/favicon.ico"
     Style="{DynamicResource MaterialDesignRoot}"
     WindowStartupLocation="CenterScreen">
     <Window.DataContext>
