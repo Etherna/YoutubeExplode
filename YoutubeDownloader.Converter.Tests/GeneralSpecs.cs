@@ -186,7 +186,7 @@ public class GeneralSpecs : IAsyncLifetime
     }
 
     [Fact]
-    public async Task I_can_download_a_video_and_track_the_progress()
+    public async Task I_can_download_a_video_while_tracking_progress()
     {
         // Arrange
         var youtube = new YoutubeClient();
@@ -202,8 +202,10 @@ public class GeneralSpecs : IAsyncLifetime
         // Assert
         var progressValues = progress.GetValues();
         progressValues.Should().NotBeEmpty();
+        progressValues.Should().Contain(p => p >= 0.99);
+        progressValues.Should().NotContain(p => p < 0 || p > 1);
 
-        foreach (var value in progress.GetValues())
+        foreach (var value in progressValues)
             _testOutput.WriteLine($"Progress: {value:P2}");
     }
 }
