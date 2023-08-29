@@ -40,11 +40,17 @@ public class YoutubeClient : IYoutubeClient
     /// </summary>
     public YoutubeClient(HttpClient http, IReadOnlyList<Cookie> initialCookies)
     {
+        // Add necessary cookies.
+        var cookies = new List<Cookie>(initialCookies)
+        {
+            new("SOCS", "CAESEwgDEgk0ODE3Nzk3MjQaAmVuIAEaBgiA_LyaBg") { Domain = "youtube.com" } //cookie consent request bypass
+        };
+
         var youtubeHttp = new HttpClient(
-            new YoutubeHttpHandler(http, initialCookies),
+            new YoutubeHttpHandler(http, cookies),
             true
         );
-
+        
         Videos = new VideoClient(youtubeHttp);
         Playlists = new PlaylistClient(youtubeHttp);
         Channels = new ChannelClient(youtubeHttp);
