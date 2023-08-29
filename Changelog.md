@@ -10,6 +10,24 @@ https://github.com/Etherna/YoutubeExplode/releases
 
 # Changelog
 
+## v6.3.2 (18-Aug-2023)
+
+- Fixed an issue where calling `StreamClient.GetManifestAsync(...)` failed on videos from the "YouTube Movies & TV" system channel.
+- Fixed an issue where calling `ChannelClient.GetAsync(...)` failed on the "YouTube Movies & TV" system channel.
+
+## v6.3.1 (23-Jul-2023)
+
+- Fixed an issue where calling `StreamClient.GetManifestAsync(...)` failed on some videos with an error saying `The format of value is invalid`.
+
+## v6.3 (21-Jul-2023)
+
+- Added support for providing cookies directly to `YoutubeClient` with the help of two new constructor overloads: `new YoutubeClient(IReadOnlyList<Cookie> initialCookies)` and `new YoutubeClient(HttpClient http, IReadOnlyList<Cookie> initialCookies)`. You will still need to obtain the cookies yourself (see the [readme](https://github.com/Tyrrrz/YoutubeExplode/blob/6.3/Readme.md#authentication) for some guidance), but YoutubeExplode will take care of generating the required headers and sending them with every request.
+
+## v6.2.17 (12-Jul-2023)
+
+- Changed the implementation of the `HttpMessageHandler` used by default in `YoutubeClient` from `HttpClientHandler` to `SocketsHttpHandler` on platforms that support it.
+- Fixed an issue where certain system playlist IDs were considered invalid, such as `LL`.
+
 ## v6.2.16 (28-Jun-2023)
 
 - Fixed an issue where `ClosedCaptionClient.WriteToAsync(...)` and `ClosedCaptionClient.DownloadAsync(...)` produced invalid SRT timestamps for caption tracks that exceeded 24 hours in length.

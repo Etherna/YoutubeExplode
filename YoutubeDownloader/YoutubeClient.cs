@@ -1,3 +1,6 @@
+using System;
+using System.Collections.Generic;
+using System.Net;
 using System.Net.Http;
 using YoutubeExplode.Channels;
 using YoutubeExplode.Playlists;
@@ -35,10 +38,19 @@ public class YoutubeClient : IYoutubeClient
     /// <summary>
     /// Initializes an instance of <see cref="YoutubeClient" />.
     /// </summary>
-    public YoutubeClient(HttpClient http)
+    public YoutubeClient(HttpClient http, IReadOnlyList<Cookie> initialCookies)
     {
-        var youtubeHttp = new HttpClient(new YoutubeHttpMessageHandler(http), true);
+        // Add necessary cookies.
+        var cookies = new List<Cookie>(initialCookies)
+        {
+            new("SOCS", "CAESEwgDEgk0ODE3Nzk3MjQaAmVuIAEaBgiA_LyaBg") { Domain = "youtube.com" } //cookie consent request bypass
+        };
 
+        var youtubeHttp = new HttpClient(
+            new YoutubeHttpHandler(http, cookies),
+            true
+        );
+        
         Videos = new VideoClient(youtubeHttp);
         Playlists = new PlaylistClient(youtubeHttp);
         Channels = new ChannelClient(youtubeHttp);
@@ -48,7 +60,24 @@ public class YoutubeClient : IYoutubeClient
     /// <summary>
     /// Initializes an instance of <see cref="YoutubeClient" />.
     /// </summary>
-    public YoutubeClient() : this(Http.Client)
+    public YoutubeClient(HttpClient http)
+        : this(http, Array.Empty<Cookie>())
+    {
+    }
+
+    /// <summary>
+    /// Initializes an instance of <see cref="YoutubeClient" />.
+    /// </summary>
+    public YoutubeClient(IReadOnlyList<Cookie> initialCookies)
+        : this(Http.Client, initialCookies)
+    {
+    }
+
+    /// <summary>
+    /// Initializes an instance of <see cref="YoutubeClient" />.
+    /// </summary>
+    public YoutubeClient()
+        : this(Http.Client)
     {
     }
 }
