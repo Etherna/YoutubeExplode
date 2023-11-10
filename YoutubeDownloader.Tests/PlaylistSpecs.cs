@@ -67,8 +67,8 @@ public class PlaylistSpecs
 
     [Theory]
     [InlineData(PlaylistIds.Normal)]
-    // [InlineData(PlaylistIds.MusicMix)]
-    // [InlineData(PlaylistIds.VideoMix)]
+    [InlineData(PlaylistIds.MusicMix)]
+    [InlineData(PlaylistIds.VideoMix)]
     [InlineData(PlaylistIds.MusicAlbum)]
     [InlineData(PlaylistIds.ContainsLongVideos)]
     [InlineData(PlaylistIds.Weird)]
@@ -152,8 +152,8 @@ public class PlaylistSpecs
 
     [Theory]
     [InlineData(PlaylistIds.Normal)]
-    // [InlineData(PlaylistIds.MusicMix)]
-    // [InlineData(PlaylistIds.VideoMix)]
+    [InlineData(PlaylistIds.MusicMix)]
+    [InlineData(PlaylistIds.VideoMix)]
     [InlineData(PlaylistIds.MusicAlbum)]
     [InlineData(PlaylistIds.UserUploads)]
     [InlineData(PlaylistIds.ContainsLongVideos)]
