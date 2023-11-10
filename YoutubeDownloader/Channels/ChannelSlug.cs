@@ -24,8 +24,7 @@ public readonly partial struct ChannelSlug
 
 public readonly partial struct ChannelSlug
 {
-    private static bool IsValid(string channelSlug) =>
-        channelSlug.All(char.IsLetterOrDigit);
+    private static bool IsValid(string channelSlug) => channelSlug.All(char.IsLetterOrDigit);
 
     private static string? TryNormalize(string? channelSlugOrUrl)
     {
@@ -63,8 +62,10 @@ public readonly partial struct ChannelSlug
     /// Parses the specified string as a YouTube channel slug or legacy custom url.
     /// </summary>
     public static ChannelSlug Parse(string channelSlugOrUrl) =>
-        TryParse(channelSlugOrUrl) ??
-        throw new ArgumentException($"Invalid YouTube channel slug or legacy custom URL '{channelSlugOrUrl}'.");
+        TryParse(channelSlugOrUrl)
+        ?? throw new ArgumentException(
+            $"Invalid YouTube channel slug or legacy custom URL '{channelSlugOrUrl}'."
+        );
 
     /// <summary>
     /// Converts string to channel slug.

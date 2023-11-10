@@ -63,13 +63,16 @@ public readonly partial struct ChannelHandle
     /// Parses the specified string as a YouTube channel handle or custom URL.
     /// </summary>
     public static ChannelHandle Parse(string channelHandleOrUrl) =>
-        TryParse(channelHandleOrUrl) ??
-        throw new ArgumentException($"Invalid YouTube channel handle or custom URL '{channelHandleOrUrl}'.");
+        TryParse(channelHandleOrUrl)
+        ?? throw new ArgumentException(
+            $"Invalid YouTube channel handle or custom URL '{channelHandleOrUrl}'."
+        );
 
     /// <summary>
     /// Converts string to channel handle.
     /// </summary>
-    public static implicit operator ChannelHandle(string channelHandleOrUrl) => Parse(channelHandleOrUrl);
+    public static implicit operator ChannelHandle(string channelHandleOrUrl) =>
+        Parse(channelHandleOrUrl);
 
     /// <summary>
     /// Converts channel handle to string.

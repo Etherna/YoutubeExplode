@@ -17,12 +17,30 @@ internal class YoutubeHttpHandler : ClientDelegatingHandler
 {
     private readonly CookieContainer _cookieContainer = new();
 
-    public YoutubeHttpHandler(HttpClient http, IReadOnlyList<Cookie> initialCookies, bool disposeClient = false)
+    public YoutubeHttpHandler(
+        HttpClient http,
+        IReadOnlyList<Cookie> initialCookies,
+        bool disposeClient = false
+    )
         : base(http, disposeClient)
     {
         // Pre-fill cookies
         foreach (var cookie in initialCookies)
             _cookieContainer.Add(cookie);
+
+        // Consent to the use of cookies on YouTube.
+        // This is required to access some personalized content, such as mix playlists.
+        // https://github.com/Tyrrrz/YoutubeExplode/issues/730
+        // https://github.com/Tyrrrz/YoutubeExplode/issues/732
+        _cookieContainer.Add(
+            new Cookie(
+                "SOCS",
+                "CAISNQgDEitib3FfaWRlbnRpdHlmcm9udGVuZHVpc2VydmVyXzIwMjMwODI5LjA3X3AxGgJlbiACGgYIgLC_pwY"
+            )
+            {
+                Domain = "youtube.com"
+            }
+        );
     }
 
     private string? TryGenerateAuthHeaderValue(Uri uri)
@@ -30,8 +48,14 @@ internal class YoutubeHttpHandler : ClientDelegatingHandler
         var cookies = _cookieContainer.GetCookies(uri).Cast<Cookie>().ToArray();
 
         var sessionId =
-            cookies.FirstOrDefault(c => string.Equals(c.Name, "__Secure-3PAPISID", StringComparison.Ordinal))?.Value ??
-            cookies.FirstOrDefault(c => string.Equals(c.Name, "SAPISID", StringComparison.Ordinal))?.Value;
+            cookies
+                .FirstOrDefault(
+                    c => string.Equals(c.Name, "__Secure-3PAPISID", StringComparison.Ordinal)
+                )
+                ?.Value
+            ?? cookies
+                .FirstOrDefault(c => string.Equals(c.Name, "SAPISID", StringComparison.Ordinal))
+                ?.Value;
 
         if (string.IsNullOrWhiteSpace(sessionId))
             return null;
@@ -52,8 +76,10 @@ internal class YoutubeHttpHandler : ClientDelegatingHandler
             return request;
 
         // Set internal API key
-        if (request.RequestUri.AbsolutePath.StartsWith("/youtubei/", StringComparison.Ordinal) &&
-            !UrlEx.ContainsQueryParameter(request.RequestUri.Query, "key"))
+        if (
+            request.RequestUri.AbsolutePath.StartsWith("/youtubei/", StringComparison.Ordinal)
+            && !UrlEx.ContainsQueryParameter(request.RequestUri.Query, "key")
+        )
         {
             request.RequestUri = new Uri(
                 UrlEx.SetQueryParameter(
@@ -69,11 +95,7 @@ internal class YoutubeHttpHandler : ClientDelegatingHandler
         if (!UrlEx.ContainsQueryParameter(request.RequestUri.Query, "hl"))
         {
             request.RequestUri = new Uri(
-                UrlEx.SetQueryParameter(
-                    request.RequestUri.OriginalString,
-                    "hl",
-                    "en"
-                )
+                UrlEx.SetQueryParameter(request.RequestUri.OriginalString, "hl", "en")
             );
         }
 
@@ -86,10 +108,12 @@ internal class YoutubeHttpHandler : ClientDelegatingHandler
         // Set user agent
         if (!request.Headers.Contains("User-Agent"))
         {
-            request.Headers.Add(
-                "User-Agent",
-                "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/89.0.4389.114 Safari/537.36"
-            );
+            request
+                .Headers
+                .Add(
+                    "User-Agent",
+                    "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/89.0.4389.114 Safari/537.36"
+                );
         }
 
         // Set cookies
@@ -101,8 +125,10 @@ internal class YoutubeHttpHandler : ClientDelegatingHandler
         }
 
         // Set authorization
-        if (!request.Headers.Contains("Authorization") &&
-            TryGenerateAuthHeaderValue(request.RequestUri) is { } authHeaderValue)
+        if (
+            !request.Headers.Contains("Authorization")
+            && TryGenerateAuthHeaderValue(request.RequestUri) is { } authHeaderValue
+        )
         {
             request.Headers.Add("Authorization", authHeaderValue);
         }
@@ -119,9 +145,9 @@ internal class YoutubeHttpHandler : ClientDelegatingHandler
         if ((int)response.StatusCode == 429)
         {
             throw new RequestLimitExceededException(
-                "Exceeded request rate limit. " +
-                "Please try again in a few hours. " +
-                "Alternatively, inject cookies corresponding to a pre-authenticated user when initializing an instance of `YoutubeClient`."
+                "Exceeded request rate limit. "
+                    + "Please try again in a few hours. "
+                    + "Alternatively, inject cookies corresponding to a pre-authenticated user when initializing an instance of `YoutubeClient`."
             );
         }
 
@@ -137,17 +163,17 @@ internal class YoutubeHttpHandler : ClientDelegatingHandler
 
     protected override async Task<HttpResponseMessage> SendAsync(
         HttpRequestMessage request,
-        CancellationToken cancellationToken)
+        CancellationToken cancellationToken
+    )
     {
-        for (var retriesRemaining = 5;; retriesRemaining--)
+        for (var retriesRemaining = 5; ; retriesRemaining--)
         {
             try
             {
-                using var clonedRequest = request.Clone();
-
                 var response = HandleResponse(
                     await base.SendAsync(
-                        HandleRequest(clonedRequest),
+                        // Request will be cloned by the base handler
+                        HandleRequest(request),
                         cancellationToken
                     )
                 );
@@ -162,9 +188,7 @@ internal class YoutubeHttpHandler : ClientDelegatingHandler
                 return response;
             }
             // Retry on connectivity issues
-            catch (HttpRequestException) when (retriesRemaining > 0)
-            {
-            }
+            catch (HttpRequestException) when (retriesRemaining > 0) { }
         }
     }
 }

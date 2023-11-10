@@ -25,8 +25,7 @@ public readonly partial struct VideoId
 public partial struct VideoId
 {
     private static bool IsValid(string videoId) =>
-        videoId.Length == 11 &&
-        videoId.All(c => char.IsLetterOrDigit(c) || c is '_' or '-');
+        videoId.Length == 11 && videoId.All(c => char.IsLetterOrDigit(c) || c is '_' or '-');
 
     private static string? TryNormalize(string? videoIdOrUrl)
     {
@@ -82,6 +81,17 @@ public partial struct VideoId
         if (!string.IsNullOrWhiteSpace(shortsMatch) && IsValid(shortsMatch))
             return shortsMatch;
 
+        // Live URL
+        // https://www.youtube.com/live/jfKfPfyJRdk
+        var liveMatch = Regex
+            .Match(videoIdOrUrl, @"youtube\..+?/live/(.*?)(?:\?|&|/|$)")
+            .Groups[1]
+            .Value
+            .Pipe(WebUtility.UrlDecode);
+
+        if (!string.IsNullOrWhiteSpace(liveMatch) && IsValid(liveMatch))
+            return liveMatch;
+
         // Invalid input
         return null;
     }
@@ -98,8 +108,8 @@ public partial struct VideoId
     /// Throws an exception in case of failure.
     /// </summary>
     public static VideoId Parse(string videoIdOrUrl) =>
-        TryParse(videoIdOrUrl) ??
-        throw new ArgumentException($"Invalid YouTube video ID or URL '{videoIdOrUrl}'.");
+        TryParse(videoIdOrUrl)
+        ?? throw new ArgumentException($"Invalid YouTube video ID or URL '{videoIdOrUrl}'.");
 
     /// <summary>
     /// Converts string to ID.

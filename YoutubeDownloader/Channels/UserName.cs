@@ -25,8 +25,7 @@ public readonly partial struct UserName
 public partial struct UserName
 {
     private static bool IsValid(string userName) =>
-        userName.Length <= 20 &&
-        userName.All(char.IsLetterOrDigit);
+        userName.Length <= 20 && userName.All(char.IsLetterOrDigit);
 
     private static string? TryNormalize(string? userNameOrUrl)
     {
@@ -64,8 +63,10 @@ public partial struct UserName
     /// Parses the specified string as a YouTube user name or profile URL.
     /// </summary>
     public static UserName Parse(string userNameOrUrl) =>
-        TryParse(userNameOrUrl) ??
-        throw new ArgumentException($"Invalid YouTube user name or profile URL '{userNameOrUrl}'.");
+        TryParse(userNameOrUrl)
+        ?? throw new ArgumentException(
+            $"Invalid YouTube user name or profile URL '{userNameOrUrl}'."
+        );
 
     /// <summary>
     /// Converts string to user name.

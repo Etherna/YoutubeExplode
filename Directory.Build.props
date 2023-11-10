@@ -5,10 +5,12 @@
     <Copyright>Copyright (C) Oleksii Holub, Copyright (C) 2023 Etherna Sagl</Copyright>
     <LangVersion>latest</LangVersion>
     <Nullable>enable</Nullable>
-    <WarningsAsErrors>nullable</WarningsAsErrors>
+    <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
     <CheckEolTargetFramework>false</CheckEolTargetFramework>
     <SuppressTfmSupportBuildWarnings>true</SuppressTfmSupportBuildWarnings>
     <IsPackable>false</IsPackable>
+
+    <NoWarn>$(NoWarn);CS1591</NoWarn>
   </PropertyGroup>
 
   <!-- Disable nullability warnings on frameworks where BCL is not annotated -->
