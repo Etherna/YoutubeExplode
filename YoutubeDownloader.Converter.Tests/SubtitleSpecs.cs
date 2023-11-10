@@ -36,17 +36,20 @@ public class SubtitleSpecs : IAsyncLifetime
         var trackInfos = trackManifest.Tracks;
 
         // Act
-        await youtube.Videos.DownloadAsync(
-            streamInfos,
-            trackInfos,
-            new ConversionRequestBuilder(filePath).Build()
-        );
+        await youtube
+            .Videos
+            .DownloadAsync(streamInfos, trackInfos, new ConversionRequestBuilder(filePath).Build());
 
         // Assert
         MediaFormat.IsMp4File(filePath).Should().BeTrue();
 
         foreach (var trackInfo in trackInfos)
-            FileEx.ContainsBytes(filePath, Encoding.ASCII.GetBytes(trackInfo.Language.Name)).Should().BeTrue();
+        {
+            FileEx
+                .ContainsBytes(filePath, Encoding.ASCII.GetBytes(trackInfo.Language.Name))
+                .Should()
+                .BeTrue();
+        }
     }
 
     [Fact]
@@ -70,16 +73,19 @@ public class SubtitleSpecs : IAsyncLifetime
         var trackInfos = trackManifest.Tracks;
 
         // Act
-        await youtube.Videos.DownloadAsync(
-            streamInfos,
-            trackInfos,
-            new ConversionRequestBuilder(filePath).Build()
-        );
+        await youtube
+            .Videos
+            .DownloadAsync(streamInfos, trackInfos, new ConversionRequestBuilder(filePath).Build());
 
         // Assert
         MediaFormat.IsWebMFile(filePath).Should().BeTrue();
 
         foreach (var trackInfo in trackInfos)
-            FileEx.ContainsBytes(filePath, Encoding.ASCII.GetBytes(trackInfo.Language.Name)).Should().BeTrue();
+        {
+            FileEx
+                .ContainsBytes(filePath, Encoding.ASCII.GetBytes(trackInfo.Language.Name))
+                .Should()
+                .BeTrue();
+        }
     }
 }

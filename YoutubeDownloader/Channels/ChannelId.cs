@@ -25,9 +25,9 @@ public readonly partial struct ChannelId
 public partial struct ChannelId
 {
     private static bool IsValid(string channelId) =>
-        channelId.StartsWith("UC", StringComparison.Ordinal) &&
-        channelId.Length == 24 &&
-        channelId.All(c => char.IsLetterOrDigit(c) || c is '_' or '-');
+        channelId.StartsWith("UC", StringComparison.Ordinal)
+        && channelId.Length == 24
+        && channelId.All(c => char.IsLetterOrDigit(c) || c is '_' or '-');
 
     private static string? TryNormalize(string? channelIdOrUrl)
     {
@@ -65,8 +65,8 @@ public partial struct ChannelId
     /// Parses the specified string as a YouTube channel ID or URL.
     /// </summary>
     public static ChannelId Parse(string channelIdOrUrl) =>
-        TryParse(channelIdOrUrl) ??
-        throw new ArgumentException($"Invalid YouTube channel ID or URL '{channelIdOrUrl}'.");
+        TryParse(channelIdOrUrl)
+        ?? throw new ArgumentException($"Invalid YouTube channel ID or URL '{channelIdOrUrl}'.");
 
     /// <summary>
     /// Converts string to ID.

@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text.Json;
+using Lazy;
 using YoutubeExplode.Utils;
 using YoutubeExplode.Utils.Extensions;
 
@@ -14,45 +15,39 @@ internal partial class SearchResponse
     // Search response is incredibly inconsistent (with at least 5 variations),
     // so we employ descendant searching, which is inefficient but resilient.
 
-    private JsonElement? ContentRoot => Memo.Cache(this, () =>
-        _content.GetPropertyOrNull("contents") ??
-        _content.GetPropertyOrNull("onResponseReceivedCommands")
-    );
+    [Lazy]
+    private JsonElement? ContentRoot =>
+        _content.GetPropertyOrNull("contents")
+        ?? _content.GetPropertyOrNull("onResponseReceivedCommands");
 
-    public IReadOnlyList<VideoData> Videos => Memo.Cache(this, () =>
-        ContentRoot?
-            .EnumerateDescendantProperties("videoRenderer")
+    [Lazy]
+    public IReadOnlyList<VideoData> Videos =>
+        ContentRoot
+            ?.EnumerateDescendantProperties("videoRenderer")
             .Select(j => new VideoData(j))
-            .ToArray() ??
+            .ToArray() ?? Array.Empty<VideoData>();
 
-        Array.Empty<VideoData>()
-    );
-
-    public IReadOnlyList<PlaylistData> Playlists => Memo.Cache(this, () =>
-        ContentRoot?
-            .EnumerateDescendantProperties("playlistRenderer")
+    [Lazy]
+    public IReadOnlyList<PlaylistData> Playlists =>
+        ContentRoot
+            ?.EnumerateDescendantProperties("playlistRenderer")
             .Select(j => new PlaylistData(j))
-            .ToArray() ??
+            .ToArray() ?? Array.Empty<PlaylistData>();
 
-        Array.Empty<PlaylistData>()
-    );
-
-    public IReadOnlyList<ChannelData> Channels => Memo.Cache(this, () =>
-        ContentRoot?
-            .EnumerateDescendantProperties("channelRenderer")
+    [Lazy]
+    public IReadOnlyList<ChannelData> Channels =>
+        ContentRoot
+            ?.EnumerateDescendantProperties("channelRenderer")
             .Select(j => new ChannelData(j))
-            .ToArray() ??
+            .ToArray() ?? Array.Empty<ChannelData>();
 
-        Array.Empty<ChannelData>()
-    );
-
-    public string? ContinuationToken => Memo.Cache(this, () =>
-        ContentRoot?
-            .EnumerateDescendantProperties("continuationCommand")
-            .FirstOrNull()?
-            .GetPropertyOrNull("token")?
-            .GetStringOrNull()
-    );
+    [Lazy]
+    public string? ContinuationToken =>
+        ContentRoot
+            ?.EnumerateDescendantProperties("continuationCommand")
+            .FirstOrNull()
+            ?.GetPropertyOrNull("token")
+            ?.GetStringOrNull();
 
     public SearchResponse(JsonElement content) => _content = content;
 }
@@ -63,82 +58,68 @@ internal partial class SearchResponse
     {
         private readonly JsonElement _content;
 
-        public string? Id => Memo.Cache(this, () =>
-            _content
-                .GetPropertyOrNull("videoId")?
-                .GetStringOrNull()
-        );
+        [Lazy]
+        public string? Id => _content.GetPropertyOrNull("videoId")?.GetStringOrNull();
 
-        public string? Title => Memo.Cache(this, () =>
-            _content
-                .GetPropertyOrNull("title")?
-                .GetPropertyOrNull("simpleText")?
-                .GetStringOrNull() ??
+        [Lazy]
+        public string? Title =>
+            _content.GetPropertyOrNull("title")?.GetPropertyOrNull("simpleText")?.GetStringOrNull()
+            ?? _content
+                .GetPropertyOrNull("title")
+                ?.GetPropertyOrNull("runs")
+                ?.EnumerateArrayOrNull()
+                ?.Select(j => j.GetPropertyOrNull("text")?.GetStringOrNull())
+                .WhereNotNull()
+                .ConcatToString();
 
+        [Lazy]
+        private JsonElement? AuthorDetails =>
             _content
-                .GetPropertyOrNull("title")?
-                .GetPropertyOrNull("runs")?
-                .EnumerateArrayOrNull()?
-                .Select(j => j.GetPropertyOrNull("text")?.GetStringOrNull())
+                .GetPropertyOrNull("longBylineText")
+                ?.GetPropertyOrNull("runs")
+                ?.EnumerateArrayOrNull()
+                ?.ElementAtOrNull(0)
+            ?? _content
+                .GetPropertyOrNull("shortBylineText")
+                ?.GetPropertyOrNull("runs")
+                ?.EnumerateArrayOrNull()
+                ?.ElementAtOrNull(0);
+
+        [Lazy]
+        public string? Author => AuthorDetails?.GetPropertyOrNull("text")?.GetStringOrNull();
+
+        [Lazy]
+        public string? ChannelId =>
+            AuthorDetails
+                ?.GetPropertyOrNull("navigationEndpoint")
+                ?.GetPropertyOrNull("browseEndpoint")
+                ?.GetPropertyOrNull("browseId")
+                ?.GetStringOrNull();
+
+        [Lazy]
+        public TimeSpan? Duration =>
+            _content
+                .GetPropertyOrNull("lengthText")
+                ?.GetPropertyOrNull("simpleText")
+                ?.GetStringOrNull()
+                ?.ParseTimeSpanOrNull(new[] { @"m\:ss", @"mm\:ss", @"h\:mm\:ss", @"hh\:mm\:ss" })
+            ?? _content
+                .GetPropertyOrNull("lengthText")
+                ?.GetPropertyOrNull("runs")
+                ?.EnumerateArrayOrNull()
+                ?.Select(j => j.GetPropertyOrNull("text")?.GetStringOrNull())
                 .WhereNotNull()
                 .ConcatToString()
-        );
+                .ParseTimeSpanOrNull(new[] { @"m\:ss", @"mm\:ss", @"h\:mm\:ss", @"hh\:mm\:ss" });
 
-        private JsonElement? AuthorDetails => Memo.Cache(this, () =>
+        [Lazy]
+        public IReadOnlyList<ThumbnailData> Thumbnails =>
             _content
-                .GetPropertyOrNull("longBylineText")?
-                .GetPropertyOrNull("runs")?
-                .EnumerateArrayOrNull()?
-                .ElementAtOrNull(0) ??
-
-            _content
-                .GetPropertyOrNull("shortBylineText")?
-                .GetPropertyOrNull("runs")?
-                .EnumerateArrayOrNull()?
-                .ElementAtOrNull(0)
-        );
-
-        public string? Author => Memo.Cache(this, () =>
-            AuthorDetails?
-                .GetPropertyOrNull("text")?
-                .GetStringOrNull()
-        );
-
-        public string? ChannelId => Memo.Cache(this, () =>
-            AuthorDetails?
-                .GetPropertyOrNull("navigationEndpoint")?
-                .GetPropertyOrNull("browseEndpoint")?
-                .GetPropertyOrNull("browseId")?
-                .GetStringOrNull()
-        );
-
-        public TimeSpan? Duration => Memo.Cache(this, () =>
-            _content
-                .GetPropertyOrNull("lengthText")?
-                .GetPropertyOrNull("simpleText")?
-                .GetStringOrNull()?
-                .ParseTimeSpanOrNull(new[] { @"m\:ss", @"mm\:ss", @"h\:mm\:ss", @"hh\:mm\:ss" }) ??
-
-            _content
-                .GetPropertyOrNull("lengthText")?
-                .GetPropertyOrNull("runs")?
-                .EnumerateArrayOrNull()?
-                .Select(j => j.GetPropertyOrNull("text")?.GetStringOrNull())
-                .WhereNotNull()
-                .ConcatToString()
-                .ParseTimeSpanOrNull(new[] { @"m\:ss", @"mm\:ss", @"h\:mm\:ss", @"hh\:mm\:ss" })
-        );
-
-        public IReadOnlyList<ThumbnailData> Thumbnails => Memo.Cache(this, () =>
-            _content
-                .GetPropertyOrNull("thumbnail")?
-                .GetPropertyOrNull("thumbnails")?
-                .EnumerateArrayOrNull()?
-                .Select(j => new ThumbnailData(j))
-                .ToArray() ??
-
-            Array.Empty<ThumbnailData>()
-        );
+                .GetPropertyOrNull("thumbnail")
+                ?.GetPropertyOrNull("thumbnails")
+                ?.EnumerateArrayOrNull()
+                ?.Select(j => new ThumbnailData(j))
+                .ToArray() ?? Array.Empty<ThumbnailData>();
 
         public VideoData(JsonElement content) => _content = content;
     }
@@ -150,59 +131,47 @@ internal partial class SearchResponse
     {
         private readonly JsonElement _content;
 
-        public string? Id => Memo.Cache(this, () =>
-            _content
-                .GetPropertyOrNull("playlistId")?
-                .GetStringOrNull()
-        );
+        [Lazy]
+        public string? Id => _content.GetPropertyOrNull("playlistId")?.GetStringOrNull();
 
-        public string? Title => Memo.Cache(this, () =>
-            _content
-                .GetPropertyOrNull("title")?
-                .GetPropertyOrNull("simpleText")?
-                .GetStringOrNull() ??
-
-            _content
-                .GetPropertyOrNull("title")?
-                .GetPropertyOrNull("runs")?
-                .EnumerateArrayOrNull()?
-                .Select(j => j.GetPropertyOrNull("text")?.GetStringOrNull())
+        [Lazy]
+        public string? Title =>
+            _content.GetPropertyOrNull("title")?.GetPropertyOrNull("simpleText")?.GetStringOrNull()
+            ?? _content
+                .GetPropertyOrNull("title")
+                ?.GetPropertyOrNull("runs")
+                ?.EnumerateArrayOrNull()
+                ?.Select(j => j.GetPropertyOrNull("text")?.GetStringOrNull())
                 .WhereNotNull()
-                .ConcatToString()
-        );
+                .ConcatToString();
 
-        private JsonElement? AuthorDetails => Memo.Cache(this, () =>
+        [Lazy]
+        private JsonElement? AuthorDetails =>
             _content
-                .GetPropertyOrNull("longBylineText")?
-                .GetPropertyOrNull("runs")?
-                .EnumerateArrayOrNull()?
-                .ElementAtOrNull(0)
-        );
+                .GetPropertyOrNull("longBylineText")
+                ?.GetPropertyOrNull("runs")
+                ?.EnumerateArrayOrNull()
+                ?.ElementAtOrNull(0);
 
-        public string? Author => Memo.Cache(this, () =>
-            AuthorDetails?
-                .GetPropertyOrNull("text")?
-                .GetStringOrNull()
-        );
+        [Lazy]
+        public string? Author => AuthorDetails?.GetPropertyOrNull("text")?.GetStringOrNull();
 
-        public string? ChannelId => Memo.Cache(this, () =>
-            AuthorDetails?
-                .GetPropertyOrNull("navigationEndpoint")?
-                .GetPropertyOrNull("browseEndpoint")?
-                .GetPropertyOrNull("browseId")?
-                .GetStringOrNull()
-        );
+        [Lazy]
+        public string? ChannelId =>
+            AuthorDetails
+                ?.GetPropertyOrNull("navigationEndpoint")
+                ?.GetPropertyOrNull("browseEndpoint")
+                ?.GetPropertyOrNull("browseId")
+                ?.GetStringOrNull();
 
-        public IReadOnlyList<ThumbnailData> Thumbnails => Memo.Cache(this, () =>
+        [Lazy]
+        public IReadOnlyList<ThumbnailData> Thumbnails =>
             _content
-                .GetPropertyOrNull("thumbnails")?
-                .EnumerateDescendantProperties("thumbnails")
+                .GetPropertyOrNull("thumbnails")
+                ?.EnumerateDescendantProperties("thumbnails")
                 .SelectMany(j => j.EnumerateArrayOrEmpty())
                 .Select(j => new ThumbnailData(j))
-                .ToArray() ??
-
-            Array.Empty<ThumbnailData>()
-        );
+                .ToArray() ?? Array.Empty<ThumbnailData>();
 
         public PlaylistData(JsonElement content) => _content = content;
     }
@@ -214,37 +183,28 @@ internal partial class SearchResponse
     {
         private readonly JsonElement _content;
 
-        public string? Id => Memo.Cache(this, () =>
-            _content
-                .GetPropertyOrNull("channelId")?
-                .GetStringOrNull()
-        );
+        [Lazy]
+        public string? Id => _content.GetPropertyOrNull("channelId")?.GetStringOrNull();
 
-        public string? Title => Memo.Cache(this, () =>
-            _content
-                .GetPropertyOrNull("title")?
-                .GetPropertyOrNull("simpleText")?
-                .GetStringOrNull() ??
-
-            _content
-                .GetPropertyOrNull("title")?
-                .GetPropertyOrNull("runs")?
-                .EnumerateArrayOrNull()?
-                .Select(j => j.GetPropertyOrNull("text")?.GetStringOrNull())
+        [Lazy]
+        public string? Title =>
+            _content.GetPropertyOrNull("title")?.GetPropertyOrNull("simpleText")?.GetStringOrNull()
+            ?? _content
+                .GetPropertyOrNull("title")
+                ?.GetPropertyOrNull("runs")
+                ?.EnumerateArrayOrNull()
+                ?.Select(j => j.GetPropertyOrNull("text")?.GetStringOrNull())
                 .WhereNotNull()
-                .ConcatToString()
-        );
+                .ConcatToString();
 
-        public IReadOnlyList<ThumbnailData> Thumbnails => Memo.Cache(this, () =>
+        [Lazy]
+        public IReadOnlyList<ThumbnailData> Thumbnails =>
             _content
-                .GetPropertyOrNull("thumbnail")?
-                .GetPropertyOrNull("thumbnails")?
-                .EnumerateArrayOrNull()?
-                .Select(j => new ThumbnailData(j))
-                .ToArray() ??
-
-            Array.Empty<ThumbnailData>()
-        );
+                .GetPropertyOrNull("thumbnail")
+                ?.GetPropertyOrNull("thumbnails")
+                ?.EnumerateArrayOrNull()
+                ?.Select(j => new ThumbnailData(j))
+                .ToArray() ?? Array.Empty<ThumbnailData>();
 
         public ChannelData(JsonElement content) => _content = content;
     }

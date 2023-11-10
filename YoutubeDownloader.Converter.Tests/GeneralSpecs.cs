@@ -16,8 +16,7 @@ public class GeneralSpecs : IAsyncLifetime
 {
     private readonly ITestOutputHelper _testOutput;
 
-    public GeneralSpecs(ITestOutputHelper testOutput) =>
-        _testOutput = testOutput;
+    public GeneralSpecs(ITestOutputHelper testOutput) => _testOutput = testOutput;
 
     public async Task InitializeAsync() => await FFmpeg.InitializeAsync();
 
@@ -114,16 +113,23 @@ public class GeneralSpecs : IAsyncLifetime
             .Take(3)
             .ToArray();
 
-        await youtube.Videos.DownloadAsync(
-            videoStreamInfos.Concat<IStreamInfo>(audioStreamInfos).ToArray(),
-            new ConversionRequestBuilder(filePath).Build()
-        );
+        await youtube
+            .Videos
+            .DownloadAsync(
+                videoStreamInfos.Concat<IStreamInfo>(audioStreamInfos).ToArray(),
+                new ConversionRequestBuilder(filePath).Build()
+            );
 
         // Assert
         MediaFormat.IsMp4File(filePath).Should().BeTrue();
 
         foreach (var streamInfo in videoStreamInfos)
-            FileEx.ContainsBytes(filePath, Encoding.ASCII.GetBytes(streamInfo.VideoQuality.Label)).Should().BeTrue();
+        {
+            FileEx
+                .ContainsBytes(filePath, Encoding.ASCII.GetBytes(streamInfo.VideoQuality.Label))
+                .Should()
+                .BeTrue();
+        }
     }
 
     [Fact]
@@ -153,16 +159,23 @@ public class GeneralSpecs : IAsyncLifetime
             .Take(3)
             .ToArray();
 
-        await youtube.Videos.DownloadAsync(
-            videoStreamInfos.Concat<IStreamInfo>(audioStreamInfos).ToArray(),
-            new ConversionRequestBuilder(filePath).Build()
-        );
+        await youtube
+            .Videos
+            .DownloadAsync(
+                videoStreamInfos.Concat<IStreamInfo>(audioStreamInfos).ToArray(),
+                new ConversionRequestBuilder(filePath).Build()
+            );
 
         // Assert
         MediaFormat.IsWebMFile(filePath).Should().BeTrue();
 
         foreach (var streamInfo in videoStreamInfos)
-            FileEx.ContainsBytes(filePath, Encoding.ASCII.GetBytes(streamInfo.VideoQuality.Label)).Should().BeTrue();
+        {
+            FileEx
+                .ContainsBytes(filePath, Encoding.ASCII.GetBytes(streamInfo.VideoQuality.Label))
+                .Should()
+                .BeTrue();
+        }
     }
 
     [Fact]
@@ -175,11 +188,16 @@ public class GeneralSpecs : IAsyncLifetime
         var filePath = Path.Combine(dir.Path, "video.mp3");
 
         // Act
-        await youtube.Videos.DownloadAsync("9bZkp7q19f0", filePath, o => o
-            .SetFFmpegPath(FFmpeg.FilePath)
-            .SetContainer("mp4")
-            .SetPreset(ConversionPreset.UltraFast)
-        );
+        await youtube
+            .Videos
+            .DownloadAsync(
+                "9bZkp7q19f0",
+                filePath,
+                o =>
+                    o.SetFFmpegPath(FFmpeg.FilePath)
+                        .SetContainer("mp4")
+                        .SetPreset(ConversionPreset.UltraFast)
+            );
 
         // Assert
         MediaFormat.IsMp4File(filePath).Should().BeTrue();
