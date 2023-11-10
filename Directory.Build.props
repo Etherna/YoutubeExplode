@@ -1,8 +1,8 @@
 <Project>
 
   <PropertyGroup>
-    <Company>Etherna Sagl</Company>
-    <Copyright>Copyright (C) Oleksii Holub, Copyright (C) 2023 Etherna Sagl</Copyright>
+    <Company>Etherna SA</Company>
+    <Copyright>Copyright (C) Oleksii Holub, Copyright (C) 2023 Etherna SA</Copyright>
     <LangVersion>latest</LangVersion>
     <Nullable>enable</Nullable>
     <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
