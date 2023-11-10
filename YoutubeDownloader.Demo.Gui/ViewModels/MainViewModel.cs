@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Threading.Tasks;
 using Microsoft.Win32;
 using YoutubeExplode.Channels;
 using YoutubeExplode.Common;
@@ -142,14 +143,14 @@ public class MainViewModel : ViewModelBase
     }
 
     public bool IsDataAvailable =>
-        Video is not null &&
-        VideoThumbnail is not null &&
-        Channel is not null &&
-        ChannelThumbnail is not null &&
-        MuxedStreamInfos is not null &&
-        AudioOnlyStreamInfos is not null &&
-        VideoOnlyStreamInfos is not null &&
-        ClosedCaptionTrackInfos is not null;
+        Video is not null
+        && VideoThumbnail is not null
+        && Channel is not null
+        && ChannelThumbnail is not null
+        && MuxedStreamInfos is not null
+        && AudioOnlyStreamInfos is not null
+        && VideoOnlyStreamInfos is not null
+        && ClosedCaptionTrackInfos is not null;
 
     public RelayCommand PullDataCommand { get; }
 
@@ -159,18 +160,18 @@ public class MainViewModel : ViewModelBase
 
     public MainViewModel()
     {
-        PullDataCommand = new RelayCommand(
-            PullData,
+        PullDataCommand = new AsyncRelayCommand(
+            PullDataAsync,
             () => !IsBusy && !string.IsNullOrWhiteSpace(Query)
         );
 
-        DownloadStreamCommand = new RelayCommand<IStreamInfo>(
-            DownloadStream,
+        DownloadStreamCommand = new AsyncRelayCommand<IStreamInfo>(
+            DownloadStreamAsync,
             _ => !IsBusy
         );
 
-        DownloadClosedCaptionTrackCommand = new RelayCommand<ClosedCaptionTrackInfo>(
-            DownloadClosedCaptionTrack,
+        DownloadClosedCaptionTrackCommand = new AsyncRelayCommand<ClosedCaptionTrackInfo>(
+            DownloadClosedCaptionTrackAsync,
             _ => !IsBusy
         );
     }
@@ -196,7 +197,7 @@ public class MainViewModel : ViewModelBase
         return dialog.ShowDialog() == true ? dialog.FileName : null;
     }
 
-    private async void PullData()
+    private async Task PullDataAsync()
     {
         if (IsBusy || string.IsNullOrWhiteSpace(Query))
             return;
@@ -245,10 +246,7 @@ public class MainViewModel : ViewModelBase
 
             var trackManifest = await _youtube.Videos.ClosedCaptions.GetManifestAsync(videoIdOrUrl);
 
-            ClosedCaptionTrackInfos = trackManifest
-                .Tracks
-                .OrderBy(t => t.Language.Name)
-                .ToArray();
+            ClosedCaptionTrackInfos = trackManifest.Tracks.OrderBy(t => t.Language.Name).ToArray();
         }
         finally
         {
@@ -258,7 +256,7 @@ public class MainViewModel : ViewModelBase
         }
     }
 
-    private async void DownloadStream(IStreamInfo streamInfo)
+    private async Task DownloadStreamAsync(IStreamInfo streamInfo)
     {
         if (IsBusy || Video is null)
             return;
@@ -295,7 +293,7 @@ public class MainViewModel : ViewModelBase
         }
     }
 
-    private async void DownloadClosedCaptionTrack(ClosedCaptionTrackInfo trackInfo)
+    private async Task DownloadClosedCaptionTrackAsync(ClosedCaptionTrackInfo trackInfo)
     {
         if (IsBusy || Video is null)
             return;
@@ -318,7 +316,10 @@ public class MainViewModel : ViewModelBase
             var progressHandler = new Progress<double>(p => Progress = p);
 
             // Download to file
-            await _youtube.Videos.ClosedCaptions.DownloadAsync(trackInfo, filePath, progressHandler);
+            await _youtube
+                .Videos
+                .ClosedCaptions
+                .DownloadAsync(trackInfo, filePath, progressHandler);
         }
         finally
         {
