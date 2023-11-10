@@ -26,8 +26,8 @@ public partial struct PlaylistId
 {
     private static bool IsValid(string playlistId) =>
         // Playlist IDs vary greatly in length, but they are at least 2 characters long
-        playlistId.Length >= 2 &&
-        playlistId.All(c => char.IsLetterOrDigit(c) || c is '_' or '-');
+        playlistId.Length >= 2
+        && playlistId.All(c => char.IsLetterOrDigit(c) || c is '_' or '-');
 
     private static string? TryNormalize(string? playlistIdOrUrl)
     {
@@ -98,8 +98,8 @@ public partial struct PlaylistId
     /// Parses the specified string as a YouTube playlist ID or URL.
     /// </summary>
     public static PlaylistId Parse(string playlistIdOrUrl) =>
-        TryParse(playlistIdOrUrl) ??
-        throw new ArgumentException($"Invalid YouTube playlist ID or URL '{playlistIdOrUrl}'.");
+        TryParse(playlistIdOrUrl)
+        ?? throw new ArgumentException($"Invalid YouTube playlist ID or URL '{playlistIdOrUrl}'.");
 
     /// <summary>
     /// Converts string to ID.

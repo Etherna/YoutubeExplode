@@ -6,6 +6,10 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="CSharpier.MsBuild" Version="0.26.0" PrivateAssets="all" />
+  </ItemGroup>
+
+  <ItemGroup>
     <ProjectReference Include="..\YoutubeDownloader\YoutubeDownloader.csproj" />
   </ItemGroup>
 
