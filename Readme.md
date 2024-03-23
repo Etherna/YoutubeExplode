@@ -28,8 +28,12 @@ For questions or problems please write an email to [info@etherna.io](mailto:info
 **YoutubeExplode** is a library that provides an interface to query metadata of YouTube videos, playlists and channels, as well as to resolve and download video streams and closed caption tracks.
 Behind a layer of abstraction, this library works by scraping raw page data and exploiting reverse-engineered internal endpoints.
 
-> 📝 Want to learn more about how YouTube works under the hood?
-> [Read this article](https://tyrrrz.me/blog/reverse-engineering-youtube-revisited).
+> 📝 Interested in the inner workings of this library?
+> See the [Reverse-Engineering YouTube](https://tyrrrz.me/blog/reverse-engineering-youtube-revisited) article.
+
+**Extension packages**:
+
+- [YoutubeExplode.Converter](YoutubeExplode.Converter) — provides an interface to download and convert videos using FFmpeg
 
 ## Install
 
@@ -124,7 +128,7 @@ await youtube.Videos.Streams.DownloadAsync(streamInfo, $"video.{streamInfo.Conta
 
 > **Warning**:
 > While the `Url` property in the stream metadata can be used to access the underlying content, you need a series of carefully crafted HTTP requests in order to do so.
-> It's highly recommended to use `Videos.Streams.GetAsync(...)` or `Videos.Streams.DownloadAsync(...)` instead, as they will all the heavy lifting for you.
+> It's highly recommended to use `Videos.Streams.GetAsync(...)` or `Videos.Streams.DownloadAsync(...)` instead, as they will perform all the heavy lifting for you.
 
 #### Downloading closed captions
 
@@ -238,6 +242,10 @@ await foreach (var batch in youtube.Playlists.GetVideoBatchesAsync(playlistUrl))
     }
 }
 ```
+
+> **Note**:
+> You can craft playlist IDs to fetch special auto-generated playlists, such as music mixes, popular channel uploads, liked videos, and more.
+> See [this reference](https://wiki.archiveteam.org/index.php/YouTube/Technical_details#Playlists) for more information.
 
 ### Channels
 
@@ -411,8 +419,3 @@ In order to actually perform the authentication, you can use an embedded browser
 ## Etymology
 
 The "Explode" in **YoutubeExplode** comes from the name of a PHP function that splits up strings, [`explode(...)`](https://php.net/manual/en/function.explode.php). When I was starting the development of this library, most of the reference source code I read was written in PHP, hence the inspiration for the name.
-
-## Related projects
-
-- [**YoutubeExplode.Converter**](YoutubeExplode.Converter) — provides capabilities for downloading YouTube videos with conversion to other formats, using FFmpeg.
-- [**YoutubeDownloader**](https://github.com/Tyrrrz/YoutubeDownloader) — desktop application for downloading YouTube videos, based on **YoutubeExplode**.

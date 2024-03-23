@@ -2,11 +2,11 @@
 
   <PropertyGroup>
     <OutputType>Exe</OutputType>
-    <TargetFramework>net7.0</TargetFramework>
+    <TargetFramework>net8.0</TargetFramework>
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="CSharpier.MsBuild" Version="0.26.0" PrivateAssets="all" />
+    <PackageReference Include="CSharpier.MsBuild" Version="0.26.7" PrivateAssets="all" />
   </ItemGroup>
 
   <ItemGroup>

@@ -7,10 +7,8 @@ using YoutubeExplode.Utils.Extensions;
 
 namespace YoutubeExplode.Bridge;
 
-internal partial class PlayerSource
+internal partial class PlayerSource(string content)
 {
-    private readonly string _content;
-
     [Lazy]
     public CipherManifest? CipherManifest
     {
@@ -18,10 +16,9 @@ internal partial class PlayerSource
         {
             // Extract the signature timestamp
             var signatureTimestamp = Regex
-                .Match(_content, @"(?:signatureTimestamp|sts):(\d{5})")
+                .Match(content, @"(?:signatureTimestamp|sts):(\d{5})")
                 .Groups[1]
-                .Value
-                .NullIfWhiteSpace();
+                .Value.NullIfWhiteSpace();
 
             if (string.IsNullOrWhiteSpace(signatureTimestamp))
                 return null;
@@ -29,15 +26,14 @@ internal partial class PlayerSource
             // Find where the player calls the cipher functions
             var cipherCallsite = Regex
                 .Match(
-                    _content,
+                    content,
                     """
-                [$_\w]+=function\([$_\w]+\){([$_\w]+)=\1\.split\(['"]{2}\);.*?return \1\.join\(['"]{2}\)}
-                """,
+                    [$_\w]+=function\([$_\w]+\){([$_\w]+)=\1\.split\(['"]{2}\);.*?return \1\.join\(['"]{2}\)}
+                    """,
                     RegexOptions.Singleline
                 )
                 .Groups[0]
-                .Value
-                .NullIfWhiteSpace();
+                .Value.NullIfWhiteSpace();
 
             if (string.IsNullOrWhiteSpace(cipherCallsite))
                 return null;
@@ -54,7 +50,7 @@ internal partial class PlayerSource
             // Find the definition of the cipher functions
             var cipherDefinition = Regex
                 .Match(
-                    _content,
+                    content,
                     // lang=js
                     $$"""
                     var {{Regex.Escape(cipherContainerName)}}={.*?};
@@ -62,8 +58,7 @@ internal partial class PlayerSource
                     RegexOptions.Singleline
                 )
                 .Groups[0]
-                .Value
-                .NullIfWhiteSpace();
+                .Value.NullIfWhiteSpace();
 
             if (string.IsNullOrWhiteSpace(cipherDefinition))
                 return null;
@@ -76,8 +71,7 @@ internal partial class PlayerSource
                     RegexOptions.Singleline
                 )
                 .Groups[1]
-                .Value
-                .NullIfWhiteSpace();
+                .Value.NullIfWhiteSpace();
 
             // Identify the splice cipher function
             var spliceFuncName = Regex
@@ -87,8 +81,7 @@ internal partial class PlayerSource
                     RegexOptions.Singleline
                 )
                 .Groups[1]
-                .Value
-                .NullIfWhiteSpace();
+                .Value.NullIfWhiteSpace();
 
             // Identify the reverse cipher function
             var reverseFuncName = Regex
@@ -98,8 +91,7 @@ internal partial class PlayerSource
                     RegexOptions.Singleline
                 )
                 .Groups[1]
-                .Value
-                .NullIfWhiteSpace();
+                .Value.NullIfWhiteSpace();
 
             var operations = new List<ICipherOperation>();
 
@@ -117,8 +109,7 @@ internal partial class PlayerSource
                     var index = Regex
                         .Match(statement, @"\([$_\w]+,(\d+)\)")
                         .Groups[1]
-                        .Value
-                        .ParseInt();
+                        .Value.ParseInt();
                     operations.Add(new SwapCipherOperation(index));
                 }
                 else if (string.Equals(calledFuncName, spliceFuncName, StringComparison.Ordinal))
@@ -126,8 +117,7 @@ internal partial class PlayerSource
                     var index = Regex
                         .Match(statement, @"\([$_\w]+,(\d+)\)")
                         .Groups[1]
-                        .Value
-                        .ParseInt();
+                        .Value.ParseInt();
                     operations.Add(new SpliceCipherOperation(index));
                 }
                 else if (string.Equals(calledFuncName, reverseFuncName, StringComparison.Ordinal))
@@ -139,8 +129,6 @@ internal partial class PlayerSource
             return new CipherManifest(signatureTimestamp, operations);
         }
     }
-
-    public PlayerSource(string content) => _content = content;
 }
 
 internal partial class PlayerSource

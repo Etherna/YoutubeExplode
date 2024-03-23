@@ -9,12 +9,8 @@ using YoutubeExplode.Tests.TestData;
 
 namespace YoutubeExplode.Tests;
 
-public class PlaylistSpecs
+public class PlaylistSpecs(ITestOutputHelper testOutput)
 {
-    private readonly ITestOutputHelper _testOutput;
-
-    public PlaylistSpecs(ITestOutputHelper testOutput) => _testOutput = testOutput;
-
     [Fact]
     public async Task I_can_get_the_metadata_of_a_playlist()
     {
@@ -33,14 +29,13 @@ public class PlaylistSpecs
         playlist.Author?.ChannelUrl.Should().NotBeNullOrWhiteSpace();
         playlist.Author?.ChannelTitle.Should().Be("Google Analytics");
         playlist
-            .Description
-            .Should()
+            .Description.Should()
             .Contain("Digital Analytics Fundamentals course on Analytics Academy");
         playlist.Thumbnails.Should().NotBeEmpty();
     }
 
     [Fact]
-    public async Task I_cannot_get_the_metadata_of_a_private_playlist()
+    public async Task I_can_try_to_get_the_metadata_of_a_playlist_and_get_an_error_if_it_is_private()
     {
         // Arrange
         var youtube = new YoutubeClient();
@@ -50,11 +45,11 @@ public class PlaylistSpecs
             async () => await youtube.Playlists.GetAsync(PlaylistIds.Private)
         );
 
-        _testOutput.WriteLine(ex.Message);
+        testOutput.WriteLine(ex.ToString());
     }
 
     [Fact]
-    public async Task I_cannot_get_the_metadata_of_a_non_existing_playlist()
+    public async Task I_can_try_to_get_the_metadata_of_a_playlist_and_get_an_error_if_it_does_not_exist()
     {
         // Arrange
         var youtube = new YoutubeClient();
@@ -64,7 +59,7 @@ public class PlaylistSpecs
             async () => await youtube.Playlists.GetAsync(PlaylistIds.NonExisting)
         );
 
-        _testOutput.WriteLine(ex.Message);
+        testOutput.WriteLine(ex.ToString());
     }
 
     [Theory]
@@ -105,8 +100,7 @@ public class PlaylistSpecs
             .Select(v => v.Id.Value)
             .Should()
             .Contain(
-                new[]
-                {
+                [
                     "uPZSSdkGQhM",
                     "fi0w57kr_jY",
                     "xLJt5A-NeQI",
@@ -128,7 +122,7 @@ public class PlaylistSpecs
                     "8Kg-8ZjgLAQ",
                     "E9zfpKsw6f8",
                     "eBCw9sC5D40"
-                }
+                ]
             );
     }
 
@@ -147,8 +141,7 @@ public class PlaylistSpecs
             .Select(v => v.Id.Value)
             .Should()
             .Contain(
-                new[]
-                {
+                [
                     "RBumgq5yVrA",
                     "kN0iD0pI3o0",
                     "YqB8Dm65X18",
@@ -158,7 +151,7 @@ public class PlaylistSpecs
                     "x-IR7PtA7RA",
                     "N-8E9mHxDy0",
                     "5ly88Ju1N6A"
-                }
+                ]
             );
     }
 
