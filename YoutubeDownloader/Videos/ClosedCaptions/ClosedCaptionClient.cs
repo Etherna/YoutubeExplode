@@ -15,14 +15,9 @@ namespace YoutubeExplode.Videos.ClosedCaptions;
 /// <summary>
 /// Operations related to closed captions of YouTube videos.
 /// </summary>
-public class ClosedCaptionClient
+public class ClosedCaptionClient(HttpClient http)
 {
-    private readonly ClosedCaptionController _controller;
-
-    /// <summary>
-    /// Initializes an instance of <see cref="ClosedCaptionClient" />.
-    /// </summary>
-    public ClosedCaptionClient(HttpClient http) => _controller = new ClosedCaptionController(http);
+    private readonly ClosedCaptionController _controller = new(http);
 
     private async IAsyncEnumerable<ClosedCaptionTrackInfo> GetClosedCaptionTrackInfosAsync(
         VideoId videoId,
@@ -39,15 +34,16 @@ public class ClosedCaptionClient
         foreach (var trackData in playerResponse.ClosedCaptionTracks)
         {
             var url =
-                trackData.Url ?? throw new YoutubeExplodeException("Could not extract track URL.");
+                trackData.Url
+                ?? throw new YoutubeExplodeException("Failed to extract the track URL.");
 
             var languageCode =
                 trackData.LanguageCode
-                ?? throw new YoutubeExplodeException("Could not extract track language code.");
+                ?? throw new YoutubeExplodeException("Failed to extract the track language code.");
 
             var languageName =
                 trackData.LanguageName
-                ?? throw new YoutubeExplodeException("Could not extract track language name.");
+                ?? throw new YoutubeExplodeException("Failed to extract the track language name.");
 
             yield return new ClosedCaptionTrackInfo(
                 url,
@@ -103,7 +99,9 @@ public class ClosedCaptionClient
 
                 var partOffset =
                     partData.Offset
-                    ?? throw new YoutubeExplodeException("Could not extract caption part offset.");
+                    ?? throw new YoutubeExplodeException(
+                        "Failed to extract the caption part offset."
+                    );
 
                 var part = new ClosedCaptionPart(partText, partOffset);
 
@@ -162,7 +160,19 @@ public class ClosedCaptionClient
                 .Append(FormatTimestamp(caption.Offset + caption.Duration))
                 .AppendLine()
                 // Content
-                .AppendLine(caption.Text);
+                .AppendLine(
+                    caption.Text
+                    // Caption text may contain valid SRT-formatted data in itself.
+                    // This can happen, for example, if the subtitles for a YouTube video
+                    // were imported from an SRT file, but something went wrong in the
+                    // process, resulting in parts of the file being read as captions
+                    // rather than control sequences.
+                    // SRT file format does not provide any means of escaping special
+                    // characters, so as a workaround we just replace the dashes in the
+                    // arrow sequence with en-dashes, which look similar enough.
+                    // https://github.com/Tyrrrz/YoutubeExplode/issues/755
+                    .Replace("-->", "––>", StringComparison.Ordinal)
+                );
 
             await writer.WriteLineAsync(buffer.ToString());
             buffer.Clear();

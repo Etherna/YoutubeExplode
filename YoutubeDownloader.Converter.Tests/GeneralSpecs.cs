@@ -12,12 +12,8 @@ using YoutubeExplode.Videos.Streams;
 
 namespace YoutubeExplode.Converter.Tests;
 
-public class GeneralSpecs : IAsyncLifetime
+public class GeneralSpecs(ITestOutputHelper testOutput) : IAsyncLifetime
 {
-    private readonly ITestOutputHelper _testOutput;
-
-    public GeneralSpecs(ITestOutputHelper testOutput) => _testOutput = testOutput;
-
     public async Task InitializeAsync() => await FFmpeg.InitializeAsync();
 
     public Task DisposeAsync() => Task.CompletedTask;
@@ -113,12 +109,10 @@ public class GeneralSpecs : IAsyncLifetime
             .Take(3)
             .ToArray();
 
-        await youtube
-            .Videos
-            .DownloadAsync(
-                videoStreamInfos.Concat<IStreamInfo>(audioStreamInfos).ToArray(),
-                new ConversionRequestBuilder(filePath).Build()
-            );
+        await youtube.Videos.DownloadAsync(
+            videoStreamInfos.Concat<IStreamInfo>(audioStreamInfos).ToArray(),
+            new ConversionRequestBuilder(filePath).Build()
+        );
 
         // Assert
         MediaFormat.IsMp4File(filePath).Should().BeTrue();
@@ -159,12 +153,10 @@ public class GeneralSpecs : IAsyncLifetime
             .Take(3)
             .ToArray();
 
-        await youtube
-            .Videos
-            .DownloadAsync(
-                videoStreamInfos.Concat<IStreamInfo>(audioStreamInfos).ToArray(),
-                new ConversionRequestBuilder(filePath).Build()
-            );
+        await youtube.Videos.DownloadAsync(
+            videoStreamInfos.Concat<IStreamInfo>(audioStreamInfos).ToArray(),
+            new ConversionRequestBuilder(filePath).Build()
+        );
 
         // Assert
         MediaFormat.IsWebMFile(filePath).Should().BeTrue();
@@ -188,19 +180,44 @@ public class GeneralSpecs : IAsyncLifetime
         var filePath = Path.Combine(dir.Path, "video.mp3");
 
         // Act
-        await youtube
-            .Videos
-            .DownloadAsync(
-                "9bZkp7q19f0",
-                filePath,
-                o =>
-                    o.SetFFmpegPath(FFmpeg.FilePath)
-                        .SetContainer("mp4")
-                        .SetPreset(ConversionPreset.UltraFast)
-            );
+        await youtube.Videos.DownloadAsync(
+            "9bZkp7q19f0",
+            filePath,
+            o =>
+                o.SetFFmpegPath(FFmpeg.FilePath)
+                    .SetContainer("mp4")
+                    .SetPreset(ConversionPreset.UltraFast)
+        );
 
         // Assert
         MediaFormat.IsMp4File(filePath).Should().BeTrue();
+    }
+
+    [Fact]
+    public async Task I_can_try_to_download_a_video_and_get_an_error_if_the_conversion_settings_are_invalid()
+    {
+        // Arrange
+        var youtube = new YoutubeClient();
+
+        using var dir = TempDir.Create();
+        var filePath = Path.Combine(dir.Path, "video.mp4");
+
+        // Act & assert
+        var ex = await Assert.ThrowsAnyAsync<Exception>(
+            async () =>
+                await youtube.Videos.DownloadAsync(
+                    "9bZkp7q19f0",
+                    filePath,
+                    o =>
+                        o.SetFFmpegPath(FFmpeg.FilePath)
+                            .SetContainer("invalid_format")
+                            .SetPreset(ConversionPreset.UltraFast)
+                )
+        );
+
+        Directory.EnumerateFiles(dir.Path, "*", SearchOption.AllDirectories).Should().BeEmpty();
+
+        testOutput.WriteLine(ex.ToString());
     }
 
     [Fact]
@@ -224,6 +241,6 @@ public class GeneralSpecs : IAsyncLifetime
         progressValues.Should().NotContain(p => p < 0 || p > 1);
 
         foreach (var value in progressValues)
-            _testOutput.WriteLine($"Progress: {value:P2}");
+            testOutput.WriteLine($"Progress: {value:P2}");
     }
 }

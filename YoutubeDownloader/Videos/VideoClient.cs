@@ -12,30 +12,19 @@ namespace YoutubeExplode.Videos;
 /// <summary>
 /// Operations related to YouTube videos.
 /// </summary>
-public class VideoClient
+public class VideoClient(HttpClient http)
 {
-    private readonly VideoController _controller;
+    private readonly VideoController _controller = new(http);
 
     /// <summary>
     /// Operations related to media streams of YouTube videos.
     /// </summary>
-    public StreamClient Streams { get; }
+    public StreamClient Streams { get; } = new(http);
 
     /// <summary>
     /// Operations related to closed captions of YouTube videos.
     /// </summary>
-    public ClosedCaptionClient ClosedCaptions { get; }
-
-    /// <summary>
-    /// Initializes an instance of <see cref="VideoClient" />.
-    /// </summary>
-    public VideoClient(HttpClient http)
-    {
-        _controller = new VideoController(http);
-
-        Streams = new StreamClient(http);
-        ClosedCaptions = new ClosedCaptionClient(http);
-    }
+    public ClosedCaptionClient ClosedCaptions { get; } = new(http);
 
     /// <summary>
     /// Gets the metadata associated with the specified video.
@@ -59,31 +48,31 @@ public class VideoClient
 
         var channelTitle =
             playerResponse.Author
-            ?? throw new YoutubeExplodeException("Could not extract video author.");
+            ?? throw new YoutubeExplodeException("Failed to extract the video author.");
 
         var channelId =
             playerResponse.ChannelId
-            ?? throw new YoutubeExplodeException("Could not extract video channel ID.");
+            ?? throw new YoutubeExplodeException("Failed to extract the video channel ID.");
 
         var uploadDate =
             playerResponse.UploadDate
             ?? watchPage.UploadDate
-            ?? throw new YoutubeExplodeException("Could not extract video upload date.");
+            ?? throw new YoutubeExplodeException("Failed to extract the video upload date.");
 
         var thumbnails = playerResponse
-            .Thumbnails
-            .Select(t =>
+            .Thumbnails.Select(t =>
             {
                 var thumbnailUrl =
-                    t.Url ?? throw new YoutubeExplodeException("Could not extract thumbnail URL.");
+                    t.Url
+                    ?? throw new YoutubeExplodeException("Failed to extract the thumbnail URL.");
 
                 var thumbnailWidth =
                     t.Width
-                    ?? throw new YoutubeExplodeException("Could not extract thumbnail width.");
+                    ?? throw new YoutubeExplodeException("Failed to extract the thumbnail width.");
 
                 var thumbnailHeight =
                     t.Height
-                    ?? throw new YoutubeExplodeException("Could not extract thumbnail height.");
+                    ?? throw new YoutubeExplodeException("Failed to extract the thumbnail height.");
 
                 var thumbnailResolution = new Resolution(thumbnailWidth, thumbnailHeight);
 

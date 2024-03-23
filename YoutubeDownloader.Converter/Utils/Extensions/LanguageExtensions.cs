@@ -5,14 +5,20 @@ namespace YoutubeExplode.Converter.Utils.Extensions;
 
 internal static class LanguageExtensions
 {
-    public static string GetTwoLetterCode(this Language language)
+    public static string? TryGetThreeLetterCode(this Language language)
     {
-        var dashIndex = language.Code.IndexOf('-');
-        return dashIndex >= 0 ? language.Code[..dashIndex] : language.Code;
-    }
+        // YouTube provides either a two-letter or a three-letter language code,
+        // which may or may not also contain a region identifier.
+        var regionNeutralLanguageCode = language.Code.SubstringUntil(
+            "-",
+            StringComparison.OrdinalIgnoreCase
+        );
 
-    public static string GetThreeLetterCode(this Language language) =>
-        language.GetTwoLetterCode().ToLowerInvariant() switch
+        // Already a three-letter code
+        if (regionNeutralLanguageCode.Length == 3)
+            return regionNeutralLanguageCode;
+
+        return regionNeutralLanguageCode.ToLowerInvariant() switch
         {
             "aa" => "aar",
             "ab" => "abk",
@@ -33,7 +39,7 @@ internal static class LanguageExtensions
             "bi" => "bis",
             "bm" => "bam",
             "bn" => "ben",
-            "bo" => "tib",
+            "bo" => "bod",
             "br" => "bre",
             "bs" => "bos",
             "ca" => "cat",
@@ -44,24 +50,24 @@ internal static class LanguageExtensions
             "cs" => "cze",
             "cu" => "chu",
             "cv" => "chv",
-            "cy" => "wel",
+            "cy" => "cym",
             "da" => "dan",
-            "de" => "ger",
+            "de" => "deu",
             "dv" => "div",
             "dz" => "dzo",
             "ee" => "ewe",
-            "el" => "gre",
+            "el" => "ell",
             "en" => "eng",
             "eo" => "epo",
             "es" => "spa",
             "et" => "est",
-            "eu" => "baq",
-            "fa" => "per",
+            "eu" => "eus",
+            "fa" => "fas",
             "ff" => "ful",
             "fi" => "fin",
             "fj" => "fij",
             "fo" => "fao",
-            "fr" => "fre",
+            "fr" => "fra",
             "fy" => "fry",
             "ga" => "gle",
             "gd" => "gla",
@@ -76,7 +82,7 @@ internal static class LanguageExtensions
             "hr" => "hrv",
             "ht" => "hat",
             "hu" => "hun",
-            "hy" => "arm",
+            "hy" => "hye",
             "hz" => "her",
             "ia" => "ina",
             "id" => "ind",
@@ -84,13 +90,17 @@ internal static class LanguageExtensions
             "ig" => "ibo",
             "ii" => "iii",
             "ik" => "ipk",
+            "in" => "ind",
             "io" => "ido",
-            "is" => "ice",
+            "is" => "isl",
             "it" => "ita",
             "iu" => "iku",
+            "iw" => "heb",
             "ja" => "jpn",
+            "ji" => "yid",
             "jv" => "jav",
-            "ka" => "geo",
+            "jw" => "jav",
+            "ka" => "kat",
             "kg" => "kon",
             "ki" => "kik",
             "kj" => "kua",
@@ -116,20 +126,21 @@ internal static class LanguageExtensions
             "lv" => "lav",
             "mg" => "mlg",
             "mh" => "mah",
-            "mi" => "mao",
-            "mk" => "mac",
+            "mi" => "mri",
+            "mk" => "mkd",
             "ml" => "mal",
             "mn" => "mon",
+            "mo" => "ron",
             "mr" => "mar",
-            "ms" => "may",
+            "ms" => "msa",
             "mt" => "mlt",
-            "my" => "bur",
+            "my" => "mya",
             "na" => "nau",
             "nb" => "nob",
             "nd" => "nde",
             "ne" => "nep",
             "ng" => "ndo",
-            "nl" => "dut",
+            "nl" => "nld",
             "nn" => "nno",
             "no" => "nor",
             "nr" => "nbl",
@@ -148,7 +159,7 @@ internal static class LanguageExtensions
             "qu" => "que",
             "rm" => "roh",
             "rn" => "run",
-            "ro" => "rum",
+            "ro" => "ron",
             "ru" => "rus",
             "rw" => "kin",
             "sa" => "san",
@@ -156,13 +167,14 @@ internal static class LanguageExtensions
             "sd" => "snd",
             "se" => "sme",
             "sg" => "sag",
+            "sh" => "hbs",
             "si" => "sin",
             "sk" => "slo",
             "sl" => "slv",
             "sm" => "smo",
             "sn" => "sna",
             "so" => "som",
-            "sq" => "alb",
+            "sq" => "sqi",
             "sr" => "srp",
             "ss" => "ssw",
             "st" => "sot",
@@ -196,8 +208,9 @@ internal static class LanguageExtensions
             "yi" => "yid",
             "yo" => "yor",
             "za" => "zha",
-            "zh" => "chi",
+            "zh" => "zho",
             "zu" => "zul",
-            var code => throw new InvalidOperationException($"Unrecognized language code '{code}'.")
+            _ => null
         };
+    }
 }

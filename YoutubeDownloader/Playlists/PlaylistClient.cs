@@ -13,14 +13,9 @@ namespace YoutubeExplode.Playlists;
 /// <summary>
 /// Operations related to YouTube playlists.
 /// </summary>
-public class PlaylistClient
+public class PlaylistClient(HttpClient http)
 {
-    private readonly PlaylistController _controller;
-
-    /// <summary>
-    /// Initializes an instance of <see cref="PlaylistClient" />.
-    /// </summary>
-    public PlaylistClient(HttpClient http) => _controller = new PlaylistController(http);
+    private readonly PlaylistController _controller = new(http);
 
     /// <summary>
     /// Gets the metadata associated with the specified playlist.
@@ -34,7 +29,7 @@ public class PlaylistClient
 
         var title =
             response.Title
-            ?? throw new YoutubeExplodeException("Could not extract playlist title.");
+            ?? throw new YoutubeExplodeException("Failed to extract the playlist title.");
 
         // System playlists have no author
         var channelId = response.ChannelId;
@@ -48,19 +43,19 @@ public class PlaylistClient
         var description = response.Description ?? "";
 
         var thumbnails = response
-            .Thumbnails
-            .Select(t =>
+            .Thumbnails.Select(t =>
             {
                 var thumbnailUrl =
-                    t.Url ?? throw new YoutubeExplodeException("Could not extract thumbnail URL.");
+                    t.Url
+                    ?? throw new YoutubeExplodeException("Failed to extract the thumbnail URL.");
 
                 var thumbnailWidth =
                     t.Width
-                    ?? throw new YoutubeExplodeException("Could not extract thumbnail width.");
+                    ?? throw new YoutubeExplodeException("Failed to extract the thumbnail width.");
 
                 var thumbnailHeight =
                     t.Height
-                    ?? throw new YoutubeExplodeException("Could not extract thumbnail height.");
+                    ?? throw new YoutubeExplodeException("Failed to extract the thumbnail height.");
 
                 var thumbnailResolution = new Resolution(thumbnailWidth, thumbnailHeight);
 
@@ -100,13 +95,13 @@ public class PlaylistClient
             {
                 var videoId =
                     videoData.Id
-                    ?? throw new YoutubeExplodeException("Could not extract video ID.");
+                    ?? throw new YoutubeExplodeException("Failed to extract the video ID.");
 
                 lastVideoId = videoId;
 
                 lastVideoIndex =
                     videoData.Index
-                    ?? throw new YoutubeExplodeException("Could not extract video index.");
+                    ?? throw new YoutubeExplodeException("Failed to extract the video index.");
 
                 // Don't yield the same video twice
                 if (!encounteredIds.Add(videoId))
@@ -120,32 +115,31 @@ public class PlaylistClient
 
                 var videoChannelTitle =
                     videoData.Author
-                    ?? throw new YoutubeExplodeException("Could not extract video author.");
+                    ?? throw new YoutubeExplodeException("Failed to extract the video author.");
 
                 var videoChannelId =
                     videoData.ChannelId
-                    ?? throw new YoutubeExplodeException("Could not extract video channel ID.");
+                    ?? throw new YoutubeExplodeException("Failed to extract the video channel ID.");
 
                 var videoThumbnails = videoData
-                    .Thumbnails
-                    .Select(t =>
+                    .Thumbnails.Select(t =>
                     {
                         var thumbnailUrl =
                             t.Url
                             ?? throw new YoutubeExplodeException(
-                                "Could not extract thumbnail URL."
+                                "Failed to extract the thumbnail URL."
                             );
 
                         var thumbnailWidth =
                             t.Width
                             ?? throw new YoutubeExplodeException(
-                                "Could not extract thumbnail width."
+                                "Failed to extract the thumbnail width."
                             );
 
                         var thumbnailHeight =
                             t.Height
                             ?? throw new YoutubeExplodeException(
-                                "Could not extract thumbnail height."
+                                "Failed to extract the thumbnail height."
                             );
 
                         var thumbnailResolution = new Resolution(thumbnailWidth, thumbnailHeight);

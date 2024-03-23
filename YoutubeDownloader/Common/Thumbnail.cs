@@ -9,26 +9,17 @@ namespace YoutubeExplode.Common;
 /// <summary>
 /// Thumbnail image.
 /// </summary>
-public partial class Thumbnail
+public partial class Thumbnail(string url, Resolution resolution)
 {
     /// <summary>
     /// Thumbnail URL.
     /// </summary>
-    public string Url { get; }
+    public string Url { get; } = url;
 
     /// <summary>
     /// Thumbnail resolution.
     /// </summary>
-    public Resolution Resolution { get; }
-
-    /// <summary>
-    /// Initializes an instance of <see cref="Thumbnail" />.
-    /// </summary>
-    public Thumbnail(string url, Resolution resolution)
-    {
-        Url = url;
-        Resolution = resolution;
-    }
+    public Resolution Resolution { get; } = resolution;
 
     /// <inheritdoc />
     [ExcludeFromCodeCoverage]
@@ -38,8 +29,7 @@ public partial class Thumbnail
 public partial class Thumbnail
 {
     internal static IReadOnlyList<Thumbnail> GetDefaultSet(VideoId videoId) =>
-        new[]
-        {
+        [
             new Thumbnail(
                 $"https://img.youtube.com/vi/{videoId}/default.jpg",
                 new Resolution(120, 90)
@@ -52,7 +42,7 @@ public partial class Thumbnail
                 $"https://img.youtube.com/vi/{videoId}/hqdefault.jpg",
                 new Resolution(480, 360)
             )
-        };
+        ];
 }
 
 /// <summary>
