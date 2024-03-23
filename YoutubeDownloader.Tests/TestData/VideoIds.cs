@@ -12,9 +12,11 @@ internal static class VideoIds
     public const string AgeRestrictedSexual = "SkRSXFQerZs";
     public const string AgeRestrictedEmbedRestricted = "hySoCSoH-g8";
     public const string RequiresPurchase = "p3dDcKOFXQg";
+    public const string RequiresPurchaseDistributed = "qs3NZHVM_Ik";
     public const string LiveStream = "jfKfPfyJRdk";
     public const string LiveStreamRecording = "rsAAeyAr-9Y";
     public const string WithBrokenTitle = "4ZJWv6t-PfY";
+    public const string WithBrokenStreams = "JQgKhZZyBYg";
     public const string WithHighQualityStreams = "V5Fsj_sCKdg";
     public const string WithOmnidirectionalStreams = "-xNN-bJQ4vI";
     public const string WithHighDynamicRangeStreams = "vX2vsvdq8nw";
