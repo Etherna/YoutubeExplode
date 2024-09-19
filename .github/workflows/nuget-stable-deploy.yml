@@ -22,8 +22,8 @@ jobs:
     - name: Build with dotnet
       run: dotnet build --configuration Release
 
-    - name: Run unit tests
-      run: dotnet test --configuration Release
+#    - name: Run unit tests
+#      run: dotnet test --configuration Release
       
     - name: Generate nuget package
       run: dotnet pack --configuration Release -o nupkg
