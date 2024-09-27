@@ -47,13 +47,15 @@ internal class VideoController(HttpClient http)
         CancellationToken cancellationToken = default
     )
     {
-        // The most optimal client to impersonate is the Android client, because
-        // it doesn't require signature deciphering (for both normal and n-parameter signatures).
-        // However, the regular Android client has a limitation, preventing it from downloading
-        // multiple streams from the same manifest (or the same stream multiple times).
-        // As a workaround, we're using ANDROID_TESTSUITE which appears to offer the same
-        // functionality, but doesn't impose the aforementioned limitation.
+        // The most optimal client to impersonate is any mobile client, because they
+        // don't require signature deciphering (for both normal and n-parameter signatures).
+        // However, we can't use the ANDROID client because it has a limitation, preventing it
+        // from downloading multiple streams from the same manifest (or the same stream multiple times).
         // https://github.com/Tyrrrz/YoutubeExplode/issues/705
+        // Previously, we were using ANDROID_TESTSUITE as a workaround, which appeared to offer the same
+        // functionality, but without the aforementioned limitation. However, YouTube discontinued this
+        // client, so now we have to use IOS instead.
+        // https://github.com/Tyrrrz/YoutubeExplode/issues/817
         using var request = new HttpRequestMessage(
             HttpMethod.Post,
             "https://www.youtube.com/youtubei/v1/player"
@@ -66,10 +68,15 @@ internal class VideoController(HttpClient http)
               "videoId": {{Json.Serialize(videoId)}},
               "context": {
                 "client": {
-                  "clientName": "ANDROID_TESTSUITE",
-                  "clientVersion": "1.9",
-                  "androidSdkVersion": 30,
+                  "clientName": "IOS",
+                  "clientVersion": "19.29.1",
+                  "deviceMake": "Apple",
+                  "deviceModel": "iPhone16,2",
                   "hl": "en",
+                  "osName": "iPhone",
+                  "osVersion": "17.5.1.21F90",
+                  "timeZone": "UTC",
+                  "userAgent": "com.google.ios.youtube/19.29.1 (iPhone16,2; U; CPU iOS 17_5_1 like Mac OS X;)",
                   "gl": "US",
                   "utcOffsetMinutes": 0
                 }
@@ -82,7 +89,7 @@ internal class VideoController(HttpClient http)
         // https://github.com/iv-org/invidious/issues/3230#issuecomment-1226887639
         request.Headers.Add(
             "User-Agent",
-            "com.google.android.youtube/17.36.4 (Linux; U; Android 12; GB) gzip"
+            "com.google.ios.youtube/19.29.1 (iPhone16,2; U; CPU iOS 17_5_1 like Mac OS X)"
         );
 
         using var response = await Http.SendAsync(request, cancellationToken);
